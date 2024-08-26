@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -169,8 +169,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _zielHoehe: 1.2
-  _daempfer: 21000
-  _feder: 120000
+  _daempfer: 1000000
+  _feder: 12000000
   _rb: {fileID: 274206458}
 --- !u!1 &165692639
 GameObject:
@@ -255,9 +255,9 @@ MonoBehaviour:
   _achsen:
   - {fileID: 1620269199}
   - {fileID: 392804018}
-  _fahrwerksTyp: 0
+  _fahrwerksTyp: 1
   rb: {fileID: 274206458}
-  "_motorSt\xE4rke": 120
+  "_motorSt\xE4rke": 350000
   reibungsKoeffizient: 0.8
 --- !u!54 &274206458
 Rigidbody:
@@ -269,11 +269,11 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1000
   m_Drag: 1.6
-  m_AngularDrag: 15
+  m_AngularDrag: 30
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 80
   m_CollisionDetection: 2
 --- !u!4 &274206459
 Transform:
@@ -301,7 +301,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 274206456}
-  m_Material: {fileID: 13400000, guid: 8a3f5f8d396626344bb6e572723cd90d, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -642,8 +642,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1982594446}
   - {fileID: 1409735679}
-  - {fileID: 1216925664}
   m_Father: {fileID: 274206459}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1661,14 +1661,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1216925663}
-  m_LocalRotation: {x: -9.313226e-10, y: 0.0000000018626451, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.38, y: -0.48, z: 2.08}
-  m_LocalScale: {x: 1, y: 0.19903001, z: 1}
+  m_LocalRotation: {x: -9.313226e-10, y: 0.0000000027939677, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0.30999985, y: -0.3999996, z: -0.13000011}
+  m_LocalScale: {x: 1, y: 0.19903003, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1630765513}
-  m_Father: {fileID: 392804019}
-  m_RootOrder: 1
+  m_Father: {fileID: 1620269198}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!114 &1216925668
 MonoBehaviour:
@@ -1683,8 +1683,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _zielHoehe: 1.2
-  _daempfer: 21000
-  _feder: 120000
+  _daempfer: 1000000
+  _feder: 12000000
   _rb: {fileID: 274206458}
 --- !u!1 &1341153201
 GameObject:
@@ -1864,7 +1864,7 @@ Transform:
   m_Children:
   - {fileID: 453849970}
   m_Father: {fileID: 392804019}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!114 &1409735683
 MonoBehaviour:
@@ -1879,8 +1879,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _zielHoehe: 1.2
-  _daempfer: 21000
-  _feder: 120000
+  _daempfer: 1000000
+  _feder: 12000000
   _rb: {fileID: 274206458}
 --- !u!1 &1620269197
 GameObject:
@@ -1911,7 +1911,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1982594446}
+  - {fileID: 1216925664}
   - {fileID: 146951200}
   m_Father: {fileID: 274206459}
   m_RootOrder: 1
@@ -2645,13 +2645,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1982594445}
-  m_LocalRotation: {x: -9.313226e-10, y: 9.313226e-10, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.7099999, y: -0.45999998, z: 2.1200001}
+  m_LocalRotation: {x: -9.313226e-10, y: 0.0000000018626451, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.63999987, y: -0.5399992, z: 4.33}
   m_LocalScale: {x: 1, y: 0.199034, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2112260179}
-  m_Father: {fileID: 1620269198}
+  m_Father: {fileID: 392804019}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!114 &1982594447
@@ -2667,8 +2667,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _zielHoehe: 1.2
-  _daempfer: 21000
-  _feder: 120000
+  _daempfer: 1000000
+  _feder: 12000000
   _rb: {fileID: 274206458}
 --- !u!1 &2112260178
 GameObject:
