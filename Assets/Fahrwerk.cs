@@ -17,7 +17,10 @@ public class Fahrwerk : MonoBehaviour
     [SerializeField]
     private float reibungsKoeffizient = 0.8f;
     private float maxVel = 25f;
-    private float drehgeschwindigkeit = 15; // Neue Variable für die Drehgeschwindigkeit
+    private float drehgeschwindigkeit = 1;
+    private float drehMomentKetteRechts = 0;
+    private float drehMomentKetteLinks = 0;
+
 
     private void FixedUpdate()
     {
@@ -52,7 +55,7 @@ public class Fahrwerk : MonoBehaviour
                 rb.AddForce(gesamtKraft * Time.fixedDeltaTime);
 
                 Vector3 drehmoment = Vector3.Cross(kraftLinks, kraftRechts);
-                rb.AddTorque(drehmoment * Time.fixedDeltaTime, ForceMode.Acceleration);
+                rb.AddTorque(drehmoment * Time.fixedDeltaTime*0.5f);
                 break;
 
             default:
@@ -129,7 +132,20 @@ public class Fahrwerk : MonoBehaviour
         float reibungsKraft = reibungsKoeffizient * normalKraft;
         float traktionskraft = _motorStärke - reibungsKraft;
 
-        return forceDirLeft * traktionskraft;
+        if (forceDirLeft.magnitude > 0)
+        {
+            drehMomentKetteLinks += 1 * Time.deltaTime;
+            drehMomentKetteLinks = Mathf.Clamp(drehMomentKetteLinks, 0, 5);
+        }
+        else
+        {
+            if(drehMomentKetteLinks > 0)
+            {
+                drehMomentKetteLinks -= 1 * Time.deltaTime;
+                drehMomentKetteLinks = Mathf.Clamp(drehMomentKetteLinks, 0, 5);
+            }
+        }
+        return forceDirLeft * traktionskraft * drehMomentKetteLinks; 
     }
     Vector3 BewegungKettenfahrwerkRechts()
     {
@@ -173,8 +189,8 @@ public class Fahrwerk : MonoBehaviour
 
          */
 
-        float forceDirRightForward = Input.GetAxis("RightVertical");
-        float forceDirRightSideward = Input.GetAxis("RightHorizontal");
+        float forceDirRightForward  =   Input.GetAxis("RightVertical");
+        float forceDirRightSideward =   Input.GetAxis("RightHorizontal");
         Vector3 forceDirRight = (transform.forward * forceDirRightForward) + (transform.right * forceDirRightSideward);
 
         float normalKraft = GetComponent<Rigidbody>().mass * Physics.gravity.magnitude;
@@ -182,9 +198,21 @@ public class Fahrwerk : MonoBehaviour
         float reibungsKraft = reibungsKoeffizient * normalKraft;
         float traktionskraft = _motorStärke - reibungsKraft;
 
+        if (forceDirRight.magnitude > 0)
+        {
+            drehMomentKetteRechts += 1 * Time.deltaTime;
+            drehMomentKetteRechts = Mathf.Clamp(drehMomentKetteRechts, 0, 5);
+        }
+        else
+        {
+            if (drehMomentKetteRechts > 0)
+            {
+                drehMomentKetteRechts -= 1 * Time.deltaTime;
+                drehMomentKetteRechts = Mathf.Clamp(drehMomentKetteRechts, 0, 5);
+            }
+        }
 
-
-        return forceDirRight * traktionskraft;
+        return forceDirRight * traktionskraft*drehMomentKetteRechts;
     }
 }
 

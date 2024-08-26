@@ -1,0 +1,25 @@
+﻿<Properties StartupConfiguration="{A07364B0-CA0B-FA52-4CD9-FAA60F6C3491}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Fahrwerk.cs">
+    <Files>
+      <File FileName="Assets/Fahrwerk.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="NilsPhysik4" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Fahrwerk.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="c4958200-c1a4-4a09-8336-b6974dec2022" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
