@@ -46,7 +46,7 @@ public class Achse : MonoBehaviour
     }
 }
 
-public enum AchsenTyp 
+public enum AchsenTyp //=> gehört in die klasse
 {
     Starr, 
     Lenkbar
