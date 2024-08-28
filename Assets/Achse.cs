@@ -6,8 +6,13 @@ public class Achse : MonoBehaviour
     private FederDaempfer _federDaempfer; 
     [SerializeField]
     private AchsenTyp achsenTyp;
-    private Vector3 ruheLage; 
+    private Vector3 ruheLage;
 
+    public enum AchsenTyp //=> gehört in die klasse
+    {
+        Starr,
+        Lenkbar
+    }
     private void Start()
     {
         ruheLage = transform.position; 
@@ -44,10 +49,4 @@ public class Achse : MonoBehaviour
     {
         return daempfer * relativeGeschwindigkeit;
     }
-}
-
-public enum AchsenTyp //=> gehört in die klasse
-{
-    Starr, 
-    Lenkbar
 }
