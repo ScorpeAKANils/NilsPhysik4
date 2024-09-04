@@ -13,10 +13,15 @@ public class FederDaempfer : MonoBehaviour
     public float Feder { get { return _feder; } } 
     [SerializeField]
     private Rigidbody _rb;
-
+    [SerializeField]
+    private Achse m_achse;
+    public float Mass = 2f; 
+    public Achse Achse { get { return m_achse; } }
+    [SerializeField]
+    LayerMask ignore; 
     Vector3 CalculateForcePerTimeStamp()
     {
-        float hoehe = transform.position.y;
+        float hoehe = transform.position .y;
         float auslenkung = _zielHoehe - hoehe;
         float federStaerke = Achse.BerechneFederkraft(_feder, auslenkung);
         float geschwindigkeit = _rb.GetPointVelocity(transform.position).y;
@@ -28,7 +33,15 @@ public class FederDaempfer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 force = CalculateForcePerTimeStamp();
-        _rb.AddForceAtPosition(force*Time.fixedDeltaTime, transform.position, ForceMode.Force);
+        RaycastHit hit;
+        bool hitSomething = Physics.Raycast(transform.position, Vector3.down, out hit, _zielHoehe, ~ignore);
+        if(hitSomething) 
+        {
+            Debug.Log(hit.collider.gameObject); 
+            Vector3 force = CalculateForcePerTimeStamp();
+            _rb.AddForceAtPosition(force, transform.position, ForceMode.Force);
+
+
+        }
     }
 }

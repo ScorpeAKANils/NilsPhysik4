@@ -1,0 +1,11 @@
+
+Wenn wir nach vorne fahren und das Lenkrad gerade ist:
+	->	Vector3 vel = (0, 0, 1) * factor
+	
+	wenn wir dann z.B Links lenken:
+		->  vel wird von (0, 0, 1) * factor	=>	(-1, 0, 1); 
+
+		Das heißt: Um ein realistisches Lenkverhalten zu erreichen sollte ich mir: 
+			=>	den richtungs Vector speichern 
+				=>	diesen bei der Lenkung auf der x Achse verändern 
+					=>	das am besten über Zeit ansteigend

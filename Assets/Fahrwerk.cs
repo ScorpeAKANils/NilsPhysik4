@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 public class Fahrwerk : MonoBehaviour
@@ -16,16 +17,26 @@ public class Fahrwerk : MonoBehaviour
     private float _motorStärke = 12000f;
     [SerializeField]
     private float reibungsKoeffizient = 0.8f;
-    private float maxVel = 10f;
-    private float drehgeschwindigkeit = 1;
-    private float drehMomentKetteRechts = 0;
-    private float drehMomentKetteLinks = 0;
+    [SerializeField]
+    List<FederDaempfer> m_reifen = new List<FederDaempfer>();
+    private float maxVel = 5    ;
+    private float inputVertical;
+    private float inputHorizontal;
+    private Vector3 bewegung;
+    public LayerMask ignore;
+    public AnimationCurve leistungsKurve; 
 
     private enum FahrwerksTyp
     {
         Radfahrwerk,
         Kettenfahrwerk
-    } 
+    }
+
+    private void Update()
+    {
+        inputVertical = Input.GetAxis("Vertical");
+        inputHorizontal = Input.GetAxis("Horizontal");
+    }
 
     private void FixedUpdate()
     {
@@ -37,38 +48,11 @@ public class Fahrwerk : MonoBehaviour
         switch (_fahrwerksTyp)
         {
             case FahrwerksTyp.Radfahrwerk:
-                Vector3 bewegung = BewegungRadfahrwerk();
-                rb.AddForce(bewegung * Time.fixedDeltaTime);
-
-                if (rb.velocity.magnitude > maxVel)
-                {
-                    rb.velocity = rb.velocity.normalized * maxVel;
-                }
-
-                if (rb.velocity.magnitude > 4)
-                {
-                    float drehInput = Input.GetAxis("Horizontal");
-                    rb.AddTorque(Vector3.up * drehInput * drehgeschwindigkeit * Time.fixedDeltaTime, ForceMode.VelocityChange);
-                }
+                HandleRadKFZ(); 
                 break;
 
             case FahrwerksTyp.Kettenfahrwerk:
-                float forceDirForward = Input.GetAxis("Vertical");
-                float sidewardMovementDir = Input.GetAxis("Horizontal");
-                Vector3 kraft = BewegungKettenfahrwerk(forceDirForward); // => annahme: Die kraft entwicklung ist gleich groß an beiden ketten
-                Vector3 kraftLinks = kraft; 
-                Vector3 kraftRechts = kraft;
-                if (sidewardMovementDir > 0) 
-                {
-                    kraftRechts *= -1; 
-                } 
-                if(sidewardMovementDir < 0) 
-                {
-                    kraftLinks *= -1;
-                }
-
-                rb.AddForceAtPosition(Time.fixedDeltaTime * kraftLinks, _achsen[0].transform.position);
-                rb.AddForceAtPosition(Time.fixedDeltaTime * kraftRechts, _achsen[1].transform.position);
+                HansBringSePanzerOhneFaustMagGoetheEhNichtSo(); 
                 break;
 
             default:
@@ -77,29 +61,80 @@ public class Fahrwerk : MonoBehaviour
         }
     }
 
-    Vector3 GetMovementVector()
+    void HandleRadKFZ() 
     {
-        float forceDirForward = Input.GetAxis("Vertical");
-
-        return (transform.forward * forceDirForward).normalized;
-    }
-
-    Vector3 BewegungRadfahrwerk()
-    {
-        float force = 0f;
-        foreach (Achse a in _achsen)
+        foreach (var r in m_reifen)
         {
-            force += a.UpdateAchse(rb);
+            if (inputVertical != 0)
+                Acceloration(r.transform, r.Achse);
+
+            if (r.Achse.m_AchsenTyp == Achse.AchsenTyp.Lenkbar)
+            {
+                r.Achse.RotateWheels(inputHorizontal, 5);
+            //this may be bullshit or i dont get it right: 
+            //rb.AddTorque(Vector3.up * inputHorizontal * 10 * Time.fixedDeltaTime, ForceMode.Force);
+                Lenkung(r.Achse, r.transform);
+            }
+            //rb.AddForceAtPosition(r.transform.forward*bewegung.magnitude * inputVertical * _motorStärke * Time.fixedDeltaTime, r.transform.position);
         }
-        return GetMovementVector() * force;
+        if (rb.velocity.magnitude > maxVel)
+        {
+            rb.velocity = Vector3.Lerp(rb.velocity, rb.velocity.normalized * maxVel, Time.fixedDeltaTime * 2f);
+        }
     }
 
-    Vector3 BewegungKettenfahrwerk(float forceDirForward)
-    {   
-        Vector3 forceDirLeft = (transform.forward * forceDirForward);
+    void HansBringSePanzerOhneFaustMagGoetheEhNichtSo() 
+    {
+        Vector3 kraft = BewegungKettenfahrwerk();
+        Vector3 kraftLinks = kraft;
+        Vector3 kraftRechts = kraft;
+        if (inputHorizontal > 0)
+        {
+            kraftRechts *= -1;
+        }
+        if (inputHorizontal < 0)
+        {
+            kraftLinks *= -1;
+        }
+
+        rb.AddForceAtPosition(Time.fixedDeltaTime * kraftLinks, _achsen[0].transform.position);
+        rb.AddForceAtPosition(Time.fixedDeltaTime * kraftRechts, _achsen[1].transform.position);
+    }
+
+    void Acceloration(Transform reifen, Achse achse) 
+    {
+            Vector3 dir = reifen.forward;
+
+            float geschwindigkeit = Vector3.Dot(this.transform.position, rb.velocity);
+            float velNormalized = Mathf.Clamp01(Mathf.Abs(geschwindigkeit) / maxVel);
+            float avaibleTorque = leistungsKurve.Evaluate(velNormalized) * inputVertical * _motorStärke;
+            rb.AddForceAtPosition(dir * avaibleTorque, reifen.position);
+    }
+    void Lenkung(Achse a, Transform reifen)
+    {
+        bool hitSomething = Physics.Raycast(reifen.position, Vector3.down, 0.6f, ~ignore);
+        if (hitSomething) 
+        {
+             float grip = 0.45f;
+             Vector3 lenkRichtung = reifen.right;
+             Vector3 reifenGeschwindigkeit = rb.GetPointVelocity(reifen.position);
+
+             float newVel = Vector3.Dot(lenkRichtung, reifenGeschwindigkeit);
+             float idealeBeschleunigung = -newVel * grip;
+
+             float beschleunigung = idealeBeschleunigung / Time.fixedDeltaTime;
+             float mass = reifen.GetComponent<FederDaempfer>().Mass;
+             Debug.Log(lenkRichtung * mass * beschleunigung); 
+             rb.AddForceAtPosition(lenkRichtung * mass * beschleunigung*Time.fixedDeltaTime, reifen.position);
+        }
+    }
+
+    Vector3 BewegungKettenfahrwerk()
+    {
+        Vector3 forceDirLeft = (transform.forward * inputVertical);
         float normalKraft = rb.mass * Physics.gravity.magnitude;
         float reibungsKraft = reibungsKoeffizient * normalKraft;
         float traktionskraft = _motorStärke - reibungsKraft;
-        return forceDirLeft * traktionskraft*3;
+        return forceDirLeft * traktionskraft * 3;
     }
 }

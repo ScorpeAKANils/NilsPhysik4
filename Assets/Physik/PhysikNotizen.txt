@@ -1,0 +1,435 @@
+Überlegungen von den Anpassungen des Federdämpfer systemens: 
+		
+		Fragestellung: 
+		1. Kannst du bitte Klassen(auch helper klassem) und funktionen deklarieren, die benötigt werden folgende Simulation einzubauen. 
+		2. Zusätzlich sollst du auch die Notizen sowie den aktuellen Code mit einbeziehen. 
+		3. Erkläre in einfachen worten wofür diese Funktion da ist und was sie macht. Bitte nehm keine Implementationen vor!		
+		Anforderungen:
+		Es soll ein Fahrwerk für eine Fahrzeugsimulation implementiert werden. 
+		Hierfür soll das physikalische Modell eines Federdämpfers verwendet werden.
+			• 3.1 Implementiere das Modell mit den oben genannten Anforderungen. 
+			• 3.2 Die Anzahl und Position der Räder soll Gamedesignern über UI Tools und Gizmos zugänglich gemacht werden. 
+			• 3.3 Feder und Dämpferkonstante sollen pro Achse einstellbar sein. 
+			• 3.4 Die Höhe des Fahrwerkes soll pro Achse einstellbar sein. (1P)
+			• 3.5 Es soll für jede Achse einzeln einstellbar sein, ob es sich um eine Lenk- oder Starrachse handelt. 	
+			• 3.6 Es soll einstellbar sein, ob das Fahrzeug als Panzer mit Panzerkettenlaufwerk oder Radfahrwerk interpretiert werden soll.
+		
+		Notizen: 
+		
+		1.	Physikalisches Modell für den Federdämpfer:
+			Basiert auf dem Hooke's Gesetz: 
+				F_feder = -k * x; 
+					wobei: 
+						k = Federkonstante 
+						x = Auslenkung der Feder
+			
+			und dem Dämpfungsgesetz: 
+				F_dämpfung = -c * v; 
+					wobei: 
+						c = Dämpfungskonstante 
+						v = relative Geschwindigkeit 
+				
+				Fragen: 
+					1. 	In welchem verhältnis stehen die Werte jeweils zueinander? 
+						Antwort: 
+							1. Verhältnis Federkonstante k und Auslenkung x
+								Die Federkraft ist direkt Proportional zur Auslenkung der Feder 
+									-> ist die Auslenkung größer, so ist es auch die Federkraft 
+								Ist die Federkonstante k größer, so ist diese Steifer
+									->	D.h bei einer gegenen Auslenkung x wird eine größere Federkraft erzeugt, welche das Fahrzeug schneller wieder in seine Ausgangslage bringt 
+							
+								1.1 Wieso das wichtig für das Fahrverhalten ist: 
+									Eine steifere Fäder(hohes k) führt zu einem härteren Fahrwerk
+										->	Fahrzeug reagiert schneller auf Auslenkungen
+											->	Fahrkonfort leidet aber darunter
+									Ist die Feder weicher
+										->	höher Fahrkonfort 
+											->	geringere Fahrsicherheit 
+								
+										
+							2.	Verhältnis Federkonstante c und relative geschwindigkeit: 
+								2.1	Ebenfalls linear
+										-> umso höher die dämpfung c ist, umso schnell nimmtt die relative geschwindigkeit ab 
+											->	umso schneller kommt das system zum stehen 
+											Das passiert weil: 
+												-umso gedämpfter das System ist, umso schneller nimmt die Energigie ab
+								
+								2.2	warum das wichtig für das Fahrverhalten ist: 
+										Umso gedämpfter ein System ist umso weniger kann das Fahrzeug schwingen 
+											->	Schlechter Fahrkonfort
+											->	Stabileres Fahrverhalten
+										-Umso geringer ein System gedämpft ist, umso mehr kann es schwingen
+											-> Besserer Fahrkonfort 
+											-> Schwammigeres Fahrverhalten 
+												->	Geringere Fahrsicherheit 
+							
+							
+							3.	Verhältnis Federkraft und Dämpfungskraft:
+								3.1	Verhältnis: 
+									->	Das dynamische Verhalten des Fahrzeuges wird durch das verhältnis zwischen Federkraft und Dämpfungskraft bestimmt
+								
+								3.2	Kritische Dämpfung:
+									->	Kritische Dämpfung ist erreicht:
+										->	wenn c so gewählt ist, dass das System keine schwingenden bewegungen mehr macht
+											-> Stattdessen soll das system das so schnell machen, dass es noch in seine Gleichgewichtslage(auch ruhe position genannt) bringt
+										->	Das ist ein häufig gewolltest verhalten 
+												->	Das liegt daran, dass sich das Fahrzeug so ohne übermäßiges Schwingen schnelle stabilisierung ermöglicht 	
+										
+								3.3	->	Überdämpfung:
+										->	Ist C(Dämpfungskonstante) zu groß:
+											-> Dann bewgt sich das System langsam in seine Gleichgewichtslage zurück
+												->	Dabei schwingt es nicht
+												->	Es kommt zu einem trägen Fahrgefühl 
+								3.4	->	Unterdämpfung:
+										->	Ist C zu klein:
+											->	Dann schwingt das Fahrzeug mehr
+											->	Es kommt zu einem Schwammigen Fahrgefühl 
+											
+							4.	Warum das wichtig für das Fahrverhalten ist: 
+								4.1	Fahrstabilität: 
+									->	Umso abgestimmter die Federkraft und Dämpfungskraft sind:
+										->	Umso stabiler, konfortabler und reaktionsfreudiger ist das Fahrgefühl 
+									->	Sind die beiden kräfte aber nicht gut aufeinander abgestimmt:
+										->	Dann entsteht ein unangenehmes, instabilles und unsicheres Fahrverhalten 
+										
+										Fragen zu den Antworten: 
+										1.	Wenn wir einen in 100 Stücken geteilten Kuchen hätten, der für die Energie verteilung steht: 
+											-> Wie viele Kuchenstücke hätte die jeweils einzustellenen Variablen? => In welchen bereich wären also ca. geeignette test werte um zu gucken ob das System funktioniert?
+											
+												Antwort: 
+													Federkraft k: 
+														60-70 Kuchenstücke 
+															Weil: 
+																-höherer Einfluss auf das Fahrverhalten
+																	->	da sie die grundsätzliche Auslenkung und Rückstellkraft des Systems bestimmt
+													Dämpfungskonstante c: 
+														30-40 Kuchenstücke
+															Weil:
+																->	geringerer Einfluss auf das Fahrverhalten
+																->	eher für die Feinjustierung zu gebrauchen 
+																	
+																	-> ich schätze deswegen ein ideales verhältnis bei: 65k/35c
+																		->	erst werde ich in 2,5er schritten anpassungen machen, sollte das nicht ideal sein	
+																			->	danach werde ich die schritte immer halbieren 	
+									
+									
+							
+							
+					2.	Und warum? 
+						-> wird in den Antworten für frage 1 mitbeantwortet. Der teil fängt IMMER mit "Wieso das wichtig für das..." an!
+					
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+		2.	Überlegungen zur Implementierung: 
+			2.1 Feder- und Dämpferkonstante pro Achse: 
+				-Jede Achse sollte einzel einstellbare Feder und Dämpferkonstanten haben 
+					-Dafür sollten diese Werte Serelized jedoch private sein
+					-Achsen werden in einer Liste(da theoretisch ja auch die anazhl der Achsen vom game designer einstellbar sein soll, sind dynamsische Listen besser als Arrays) gespeichert
+			
+			2.2 Höhe des Fahrwerks: 
+				-Einstellbares Fahrwerks: 
+					-Fahrwerk brauch eine einstellbare targetHeight 
+					-und ebenfalls eine Liste von Achsen 
+			
+			2.3 Lenk und Starachse: 
+				-Es soll einstellbar sein ob eine Achse lenkbar oder star ist 
+					-über enum einstellbar: 
+						Enum Achse 				//=> enum weil lesbarer im Inspektor als Dropdown 
+						{
+							Starr = 1, 			//=>Rotation der Räder ist gesperrt  
+							Lenkbar = 2			//=>Rotation der Räder erlaubt  
+						}
+			
+			2.4 Radfahrwerk oder Panzerfahrwerk:
+				-Über enum einstellbarer 
+						Enum Fahrwerk 			
+						{
+							Kette = 1, 			  
+							Rad = 2				 
+						}
+				
+				Fragen: 
+					1. 	Inwiefern unterscheiden sich die Eigenschaften von Rad und Kettenfahrzeugen? 
+						Antwort: 
+							1.1	Beweglichkeit und wendigkeit 
+								->	Radfahrzeuge:
+									-	beweglicher
+										->	besonders auf befestigten Straßen
+									-	Erreichen höhere Geschwindigkeiten
+									-	Geringerer Rollwiderstand führt zu mehr Effizienz:
+										->	da geringerer Treibstoff verbrauch
+									-	Schlechter für unwegsames Gelände zugebrauchen 
+										->	das liegt daran, dass reifen leichter in weichen Boden stecken bleiben 
+								->	Kettenfahrzeuge: 
+									-	Gelände tauglicher
+										->	das liegt daran, dass das Gewicht auf eine größere Fläche verteilt ist 
+									-	Sind auf festen Untergründen meist langsamer
+									-	Können besser in engen oder unwegsamen Gelände Manövrieren
+										->	das liegt daran, dass sie sich an Ort und Stelle drehen können 
+							
+							1.2	Aufhängung und Federung: 
+								->	Radfahrzeuge:
+									-	Höherer Fahrkonfort
+										->	Individuelle Federung und Aufhängung pro Rad 
+									-	Höhere Komplexität(
+										->	durch z.B. Individuelle Federung und Aufhängung 
+								->	Kettenfahrzeuge:
+									-	Robustere und einfachere Federung 	//=> Robuster meint in dem Fall:  Die Kette ist widerstandsfähigker und dadurch langlebiger 
+										->	Die Fahrzeugkette ist mit dem Gesammten Fahrzeug verbunden, wodurch sie weniger komplex ist 
+									-	Federung ist weniger Anpasstbar 
+										->	Weniger Fahrkonfort
+										->	aber besser auf unwegsamen Gelände 
+							
+							1.3	Einfluss auf das Fahrverhalten: 
+								->	Radfahrzeug: 
+									-	Bessere Fahrbarkeit auf Straßen
+										->	Das liegt an der bessere Manövrierfertigkeit und individuellen Federung 
+									-	Schlechter im Gelände 
+										-> durch z.B. im Gelände feststeckende Reifen
+								->	Kettenfahrzeuge:
+									-	Besser im Gelände 
+										->	langelebige Kette
+										->	Verteilung des Gewichtes auf größere Fläche
+									
+					2. 	Welchen einfluss hat die Fahrwerkshöhe auf das Fahrverhalten? 
+						Antwort:
+							2.1	Schwerpunkt und stabillität: 
+								-> Höhergelegtes Fahrwerk: 
+									-	Erhöhter Schwerpunkt
+										->	Erhöhtes risiko des umkippens in Kurven oder bei schnellen bewegungen 
+									-Verbesserte Bodenfreiheit
+										->	Fahrzeug rumpf ist höher wodurch mehr hindernisse überfahren werden ohne das Fahrzeug zubeschädigen 
+									-	Verschlechterte Kurvenlage
+										->	Durch den höheren schwerpunkt des Fahrzeuges nimmt die Neigung des Fahrzeuges in Kurven zu
+								->	Tiefergelegtes Fahrwerk: 
+									-	Höhere stabilität bei Kurven und höheren Geschwindigkeiten
+										->	Das liegt am niedrigeren Schwerpunkt 
+									-	verschlechterte Bodenfreiheit
+										-> niedirigere Hindernisse können nur überfahren werden(wenn überhaupt)
+											-> durch den niedrigeren Schwerpunkt
+							
+							
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////					
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\					
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------					
+
+		
+		3.	Vereinfachungen: 
+			3.1	Vereinfachungen der Feder und Dämpferberechnung: 
+				-Um die berechnung zu vereinfachen kann man folgende Dinge in betracht ziehen: 
+					-Federkraft hängt liniear von der Auslänkung ab
+					-Dämpfkraft linear von der Geschwindigkeit
+				
+				Begründung:  
+					-Performanter
+					-Realistisch genug 
+					-einfacher zu implementieren 
+			
+			3.2	Ausblenden von nicht Essentiellen Details: 
+					-Es ist nicht nötig alles Physikalisch genau zu halten
+						-kleinere Unebenheiten z.B. könnten Ignoriert werden 
+						
+					Begründung: 
+						um die implementation zuvereinfachen 
+						
+				Fragen: 
+					1.	Wie könnte eine Gleichung aussehen, wie sie in 3.1 beschrieben ist? 
+						Antwort: 
+							Die Vereinfachte Gleichung von der Federkraft ist: 
+								F_feder = -k * x;
+									->	k = Federkonstante, x = Auslenkung der Feder
+							Die Vereinfachte Gleichung der von der Dämpfungskraft ist: 
+								F_dämpfung = -c * v; 
+									->	c = Dämpfungskonstante, v = relative Geschwindigkeit
+							Daraus ergibt sich: 
+								F_gesamt = F_feder + F_dämpfung = -k*x-c*v; // => -c*v weil das + aufgrund c's vorzeichen zu minus wird 
+								
+					2. 	Inwiefern beeinflusst das ignorieren kleinerer unebenheiten die implementation? 
+						2.1	Welche vorteile und welche nachteile gäbe es?
+							->	Vorteile:
+								-	Verbesserte Performance 
+									->	das system muss nicht auf jeden kleinen Hubel reagieren
+								-	Einfachere Implementation 
+									-> durch weniger faktoren die zu berüchtigen sind, wird die Implementationszeit reduziert 
+								-	Stabileres verhaltem 
+									->	dadurch schwankt die Simulation weniger, was zu weniger störendem verhalten führen kann 
+							->	Nachteile: 
+								-	Redzierter Realismus 
+									-> verlust an Detailgenauigkeit
+										->	Könnte die Spielerfahrung in realistischen Rennsimmulationen z.B. beinträchtigen. 
+										->	Das ist mir aber egal.
+								
+							=> Sollte man machen. 
+								
+					3.	Was könnten weitere Vereinfachungen sein? 
+						3.1 Vernachlässigung  von Roll- und Luftwiderstand: 
+							-	der Fokus auf Roll- und Luftwiderstand kann reduziert werden, da diese Kräfte häufig kleiner sind als 
+								die Feder- und Dämpferkräfte
+									-> somit nehmen sie weniger Einfluss auf das Fahrverhalten
+								Vorteil:
+									->	Geringerer Rechenaufwand 
+									->	Einfachere Implementation 
+								Nachteil: 
+									->	Weniger realistische Fahrphysik // => Fragt sich halt nur: wie viel weniger realistisch man. 
+								
+								=> ich denke ich werde es verwenden, werde bei der Implatation nochmal abwiegen wollen. 
+							
+						3.2	Approximative Reibungsmodelle 
+							-	Anstatt komplexer Reibungsmodelle könnte ein einfaches Coulomb - Reibungsmodell verwendet werden 
+								
+								++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+								+################################################################################################+
+								+################################################################################################+
+								+##   Coulomb Reibungsmodell: 																   ##+	
+								+##		->	Gibt an wie viel Kraft benötigt wird, um ein Objekt zu bewegen.					   ##+	
+								+##			->	Haftreibung:																   ##+
+								+##					-	Es muss eine gewisse kraft überwunden werden, um ein Objekt zu bewegen.##+			
+								+##			->	Gleitreibung																   ##+				
+								+##					-	wenn sich ein Objekt bewegt, dann bleibt die Reibungskraft konstant    ##+
+								+##						-	ist für gewöhnlich kleiner als die Haftreibung                     ##+
+								+################################################################################################+
+								+################################################################################################+
+							    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+								
+								Vorteil: 
+									-	weniger berechnungen pro Zeitschritt
+								Nachteil:
+									-	Bei extremen Fahrmernövern könnten Unrealistisches Verhalten auftreten 
+						
+						3.3 Vereinfachte Kontaktpunkte: 
+							-	Man könnte doe Kontaktpunkte vereinfacht als einzelnen punkt oder linie behandeln 
+								Vorteil: 
+									->	Reduzierte komplexität der berechnung 
+								Nachteil: 
+									->	Ungenau bei uneben flächen 
+									->	Ungenau bein Seitlichen kräften
+								
+								=>	Verzichte ich drauf, denke ich 
+							
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////						
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\			
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+		4.	Hinweise zur Technischen Anpassungen um Skript: 
+			4.1 Liste von Achsen welche jeweils einstellungen für die Werte von: 
+				-targetHeight
+				-damp
+				-feather
+				-Lenkbar/Starr?
+				-Rad/Kette?
+			
+			4.2 Funktion zur Initialiserung der Achse um die Werte einzustellen
+			
+			4.3 Physics immer in FixedUpdate()!!!!!
+			
+Code Base:
+using UnityEngine;
+
+public class FederDaempfer : MonoBehaviour
+{
+    [SerializeField]
+    float targetHeight = 1.5f;
+    [SerializeField]
+    private float damp = 0.95f;
+    [SerializeField]
+    private float raycastModiyer = 1.125f; 
+    [SerializeField]
+    private float raycastRange = 1f;
+    [SerializeField]
+    private float feather = 10f;
+    [SerializeField]
+    Vector3 force;
+    private Rigidbody rb;
+    [SerializeField]
+    float minYForce = 0.4f;
+    float refFeather;
+    public bool isGrounded;
+    [SerializeField]
+    private LayerMask ignore;
+    [SerializeField]
+    private float minForce = 50f; 
+    private float yOffset { get { return transform.localScale.y / 2; } }
+    float springForce=0;
+    // Start is called before the first frame update
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        refFeather = feather;
+    }    
+    float timeSpan = 100f;
+    void FixedUpdate()
+    {
+        //float damping = 5.0f; // Dämpfungskonstante
+       
+        if (Physics.SphereCast(GetRayOrigin(), raycastRange, Vector3.down, out RaycastHit hit, raycastRange * raycastModiyer, ~ignore))
+        {
+
+            force = CalculateForcePerTimeStep();
+
+            if(force.sqrMagnitude >= Mathf.Pow((minForce*Time.fixedDeltaTime)/timeSpan, 2)) 
+            {
+                rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+                rb.useGravity = true;
+                rb.AddForce(force, ForceMode.Acceleration);
+            } 
+            else if(rb.constraints != RigidbodyConstraints.FreezePositionY) 
+            {
+                rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+                rb.useGravity = false;
+                var pos = transform.position;
+                pos.y = hit.point.y + CalculateForcePerTimeStep().y + (transform.localScale.y / 2);
+                transform.position = pos;
+            }
+        }
+        else 
+        {
+            rb.constraints = RigidbodyConstraints.None | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            rb.useGravity = true;
+        }
+    }
+
+    Vector3 CalculateForcePerTimeStep()
+    {
+        Vector3 newForce = Vector3.zero; 
+        Vector3 startPos = transform.position;
+        float currentVel;
+        float dampedVel=1f; 
+        for(float i = 0; i < timeSpan; i += Time.fixedDeltaTime) 
+        {
+            if (Physics.SphereCast(GetRayOrigin(), raycastRange, Vector3.down, out RaycastHit hit, raycastRange * raycastModiyer, ~ignore))
+            {
+                Vector3 hitNormal = hit.normal;
+                startPos.y += (transform.position.y * Time.fixedDeltaTime) - targetHeight;
+                float distanceToTarget = transform.position.y + (transform.position.y *Time.fixedDeltaTime) - targetHeight;
+                springForce = distanceToTarget * feather;
+                float dampingForce = damp * rb.velocity.y;
+                newForce += (springForce) * ((i/timeSpan)*(Time.fixedDeltaTime)) * Vector3.up;
+                currentVel = rb.velocity.magnitude; 
+                dampedVel = Mathf.SmoothDamp((dampingForce * ((i / timeSpan) * (Time.fixedDeltaTime)) * Vector3.up).magnitude, 0, ref currentVel, Time.smoothDeltaTime);
+            }
+        }
+        return (newForce).normalized*(springForce-dampedVel); 
+    }
+    Vector3 GetRayOrigin()
+    {
+        Vector3 origin = transform.position;
+        origin.y -= (transform.localScale.y / 2);
+        return origin;
+    }
+}
+
+
+			
+			
+			
+				
+			
+	
