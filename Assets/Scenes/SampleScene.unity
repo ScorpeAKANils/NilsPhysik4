@@ -148,7 +148,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 16595403}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.40000007, y: -1.0000001, z: -0.26376382}
+  m_LocalPosition: {x: 0.40000007, y: 4899.687, z: -53925.848}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -167,12 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 6.77
-  _daempfer: 3500
-  _feder: 20000
-  _rb: {fileID: 1626664333}
+  m_daempfer: 4500
+  m_feder: 5500
+  m_rb: {fileID: 1626664333}
   m_achse: {fileID: 615538863}
-  Mass: 2
+  Mass: 0.5
   ignore:
     serializedVersion: 2
     m_Bits: 4
@@ -419,10 +418,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 1.6
-  _daempfer: 35000
-  _feder: 650000
-  _rb: {fileID: 1836701574}
+  m_daempfer: 0
+  m_feder: 0
+  m_rb: {fileID: 0}
   m_achse: {fileID: 0}
   Mass: 2
   ignore:
@@ -459,6 +457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _federDaempfer: {fileID: 1650411711}
   m_AchsenTyp: 0
+  m_fahrwerksHoehe: 1.2
   m_reifen: []
 --- !u!4 &289622684
 Transform:
@@ -468,7 +467,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 289622682}
   m_LocalRotation: {x: -0.017816454, y: -0.016347196, z: 0.010038454, w: 0.9996573}
-  m_LocalPosition: {x: -0.499, y: -1.98, z: -0}
+  m_LocalPosition: {x: -0.5, y: -2, z: -0}
   m_LocalScale: {x: 0.9991205, y: 3.1465116, z: 1.2529866}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -747,6 +746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _federDaempfer: {fileID: 1216925668}
   m_AchsenTyp: 0
+  m_fahrwerksHoehe: 1.2
   m_reifen: []
 --- !u!4 &392804019
 Transform:
@@ -756,7 +756,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 392804017}
   m_LocalRotation: {x: -0.017816454, y: -0.016347196, z: 0.010038454, w: 0.9996573}
-  m_LocalPosition: {x: 0.501, y: -1.98, z: -0}
+  m_LocalPosition: {x: 0.5, y: -2, z: -0}
   m_LocalScale: {x: 0.9991205, y: 3.1465116, z: 1.2529866}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -892,6 +892,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _federDaempfer: {fileID: 1959006917}
   m_AchsenTyp: 0
+  m_fahrwerksHoehe: 0
   m_reifen: []
 --- !u!4 &503910704
 Transform:
@@ -939,10 +940,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 1.6
-  _daempfer: 35000
-  _feder: 650000
-  _rb: {fileID: 1836701574}
+  m_daempfer: 0
+  m_feder: 0
+  m_rb: {fileID: 0}
   m_achse: {fileID: 0}
   Mass: 2
   ignore:
@@ -988,9 +988,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 615538861}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.76376265}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.76376253}
+  m_LocalScale: {x: 0.99999994, y: 1, z: 0.99999994}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 16595404}
@@ -1012,6 +1012,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _federDaempfer: {fileID: 16595405}
   m_AchsenTyp: 1
+  m_fahrwerksHoehe: 1.6
   m_reifen:
   - {fileID: 16595404}
   - {fileID: 739580883}
@@ -1123,6 +1124,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
+  - component: {fileID: 705507997}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -1207,6 +1209,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &705507997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c24a6b8d56a0440b965d55f37f4349, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showGizmo: 1
+  gizmoColor:
+    r: 1
+    g: 1
+    b: 1
+    a: 1
+  gizmoRadius: 1
 --- !u!1 &739580882
 GameObject:
   m_ObjectHideFlags: 0
@@ -1232,7 +1253,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 739580882}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.39999995, y: -1.0000001, z: -0.2637637}
+  m_LocalPosition: {x: -0.39999995, y: 4899.687, z: -53925.848}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1251,12 +1272,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 6.77
-  _daempfer: 3500
-  _feder: 20000
-  _rb: {fileID: 1626664333}
+  m_daempfer: 4500
+  m_feder: 5500
+  m_rb: {fileID: 1626664333}
   m_achse: {fileID: 615538863}
-  Mass: 2
+  Mass: 0.5
   ignore:
     serializedVersion: 2
     m_Bits: 4
@@ -1460,6 +1480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f450f101fd0f974799f3e07d8c075da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localLocPos: {x: 0, y: 0, z: 0}
 --- !u!54 &797884960
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1499,7 +1520,7 @@ MonoBehaviour:
   m_reifen: []
   ignore:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4
   leistungsKurve:
     serializedVersion: 2
     m_Curve: []
@@ -1845,12 +1866,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 6.77
-  _daempfer: 3500
-  _feder: 20000
-  _rb: {fileID: 1626664333}
+  m_daempfer: 45000
+  m_feder: 55000
+  m_rb: {fileID: 1626664333}
   m_achse: {fileID: 1081115393}
-  Mass: 2
+  Mass: 0.5
   ignore:
     serializedVersion: 2
     m_Bits: 4
@@ -1862,7 +1882,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 971919798}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.40305766, y: -1.0005687, z: -0.48064086}
+  m_LocalPosition: {x: -0.4030574, y: 4899.687, z: -53924.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2109,10 +2129,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 1.2
-  _daempfer: 21000
-  _feder: 120000
-  _rb: {fileID: 1836701574}
+  m_daempfer: 0
+  m_feder: 0
+  m_rb: {fileID: 0}
   m_achse: {fileID: 0}
   Mass: 2
   ignore:
@@ -2166,6 +2185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _federDaempfer: {fileID: 1341153208}
   m_AchsenTyp: 0
+  m_fahrwerksHoehe: 1.6
   m_reifen: []
 --- !u!1 &1116713658
 GameObject:
@@ -2427,6 +2447,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _federDaempfer: {fileID: 2059401195}
   m_AchsenTyp: 0
+  m_fahrwerksHoehe: 0
   m_reifen: []
 --- !u!1 &1216925663
 GameObject:
@@ -2473,15 +2494,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 0.2
-  _daempfer: 10000
-  _feder: 300000
-  _rb: {fileID: 797884960}
-  m_achse: {fileID: 0}
+  m_daempfer: 3500
+  m_feder: 20000
+  m_rb: {fileID: 797884960}
+  m_achse: {fileID: 392804018}
   Mass: 2
   ignore:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4
 --- !u!1 &1242527897
 GameObject:
   m_ObjectHideFlags: 0
@@ -2702,7 +2722,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1341153201}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.39694864, y: -0.99935764, z: -0.48167425}
+  m_LocalPosition: {x: 0.39694792, y: 4899.6895, z: -53924.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2721,12 +2741,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 6.77
-  _daempfer: 3500
-  _feder: 20000
-  _rb: {fileID: 1626664333}
+  m_daempfer: 45000
+  m_feder: 55000
+  m_rb: {fileID: 1626664333}
   m_achse: {fileID: 1081115393}
-  Mass: 2
+  Mass: 0.5
   ignore:
     serializedVersion: 2
     m_Bits: 4
@@ -2875,6 +2894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f450f101fd0f974799f3e07d8c075da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localLocPos: {x: 0, y: 0, z: 0}
 --- !u!65 &1444715164
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3262,6 +3282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _federDaempfer: {fileID: 507719567}
   m_AchsenTyp: 0
+  m_fahrwerksHoehe: 0
   m_reifen: []
 --- !u!4 &1558442612
 Transform:
@@ -3340,6 +3361,8 @@ GameObject:
   - component: {fileID: 1626664334}
   - component: {fileID: 1626664333}
   - component: {fileID: 1626664339}
+  - component: {fileID: 1626664340}
+  - component: {fileID: 1626664341}
   m_Layer: 2
   m_Name: RadFahrzeug
   m_TagString: Untagged
@@ -3356,8 +3379,8 @@ Rigidbody:
   m_GameObject: {fileID: 1626664332}
   serializedVersion: 2
   m_Mass: 240
-  m_Drag: 1.6
-  m_AngularDrag: 2
+  m_Drag: 1
+  m_AngularDrag: 0.03
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -3516,6 +3539,36 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.99999994, y: 1, z: 0.99999994}
   m_Center: {x: 0, y: -0.5, z: 0}
+--- !u!114 &1626664340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626664332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 941c6bdcb9b17f84ebf20e35b04ee2c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  "anzahlR\xE4der": 4
+  radPositionen:
+  - {fileID: 16595404}
+  - {fileID: 739580883}
+  - {fileID: 1341153202}
+  - {fileID: 971919805}
+--- !u!114 &1626664341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626664332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a540cfbbfabc4949af1d7ba7f97f9b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1629062142
 GameObject:
   m_ObjectHideFlags: 0
@@ -3740,15 +3793,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 0.2
-  _daempfer: 10000
-  _feder: 300000
-  _rb: {fileID: 797884960}
-  m_achse: {fileID: 0}
+  m_daempfer: 3500
+  m_feder: 20000
+  m_rb: {fileID: 797884960}
+  m_achse: {fileID: 289622683}
   Mass: 2
   ignore:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4
 --- !u!4 &1650411712
 Transform:
   m_ObjectHideFlags: 0
@@ -4101,10 +4153,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 1.6
-  _daempfer: 35000
-  _feder: 650000
-  _rb: {fileID: 1836701574}
+  m_daempfer: 0
+  m_feder: 0
+  m_rb: {fileID: 0}
   m_achse: {fileID: 0}
   Mass: 2
   ignore:
@@ -4531,10 +4582,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 1.6
-  _daempfer: 35000
-  _feder: 650000
-  _rb: {fileID: 1836701574}
+  m_daempfer: 0
+  m_feder: 0
+  m_rb: {fileID: 0}
   m_achse: {fileID: 0}
   Mass: 2
   ignore:
@@ -4601,10 +4651,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _zielHoehe: 1.2
-  _daempfer: 21000
-  _feder: 120000
-  _rb: {fileID: 1836701574}
+  m_daempfer: 0
+  m_feder: 0
+  m_rb: {fileID: 0}
   m_achse: {fileID: 0}
   Mass: 2
   ignore:

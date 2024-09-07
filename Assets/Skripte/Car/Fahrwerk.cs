@@ -26,7 +26,7 @@ public class Fahrwerk : MonoBehaviour
     public LayerMask ignore;
     public AnimationCurve leistungsKurve; 
 
-    private enum FahrwerksTyp
+    public enum FahrwerksTyp
     {
         Radfahrwerk,
         Kettenfahrwerk
@@ -70,9 +70,9 @@ public class Fahrwerk : MonoBehaviour
 
             if (r.Achse.m_AchsenTyp == Achse.AchsenTyp.Lenkbar)
             {
-                r.Achse.RotateWheels(inputHorizontal, 5);
+               r.Achse.RotateWheels(inputHorizontal, 5);
             //this may be bullshit or i dont get it right: 
-            //rb.AddTorque(Vector3.up * inputHorizontal * 10 * Time.fixedDeltaTime, ForceMode.Force);
+                rb.AddTorque(Vector3.up * inputHorizontal * Time.deltaTime, ForceMode.VelocityChange);
                 Lenkung(r.Achse, r.transform);
             }
             //rb.AddForceAtPosition(r.transform.forward*bewegung.magnitude * inputVertical * _motorStärke * Time.fixedDeltaTime, r.transform.position);
@@ -112,20 +112,21 @@ public class Fahrwerk : MonoBehaviour
     }
     void Lenkung(Achse a, Transform reifen)
     {
-        bool hitSomething = Physics.Raycast(reifen.position, Vector3.down, 0.6f, ~ignore);
+        bool hitSomething = Physics.Raycast(reifen.position, Vector3.down, a.FahrwerksHoehe, ~ignore);
         if (hitSomething) 
         {
-             float grip = 0.45f;
-             Vector3 lenkRichtung = reifen.right;
+             float grip = 0.05f;
+             Vector2 lenkInput = new Vector2(inputHorizontal, inputVertical);
+            Vector3 lenkDir = new Vector3(lenkInput.x, 0, lenkInput.y).normalized; 
              Vector3 reifenGeschwindigkeit = rb.GetPointVelocity(reifen.position);
 
-             float newVel = Vector3.Dot(lenkRichtung, reifenGeschwindigkeit);
+             float newVel = Vector3.Dot(lenkDir, reifenGeschwindigkeit);
              float idealeBeschleunigung = -newVel * grip;
 
              float beschleunigung = idealeBeschleunigung / Time.fixedDeltaTime;
              float mass = reifen.GetComponent<FederDaempfer>().Mass;
-             Debug.Log(lenkRichtung * mass * beschleunigung); 
-             rb.AddForceAtPosition(lenkRichtung * mass * beschleunigung*Time.fixedDeltaTime, reifen.position);
+             //Debug.Log(lenkInput * mass * beschleunigung); 
+             rb.AddForceAtPosition(lenkDir  * mass *  beschleunigung * Time.fixedDeltaTime, reifen.position);
         }
     }
 
@@ -136,5 +137,10 @@ public class Fahrwerk : MonoBehaviour
         float reibungsKraft = reibungsKoeffizient * normalKraft;
         float traktionskraft = _motorStärke - reibungsKraft;
         return forceDirLeft * traktionskraft * 3;
+    }
+
+    public void SetFahrwerk(Fahrwerk.FahrwerksTyp f) 
+    {
+        _fahrwerksTyp = f; 
     }
 }

@@ -7,11 +7,15 @@ public class Achse : MonoBehaviour
     private FederDaempfer _federDaempfer; 
     [SerializeField]
     public AchsenTyp m_AchsenTyp;
+    [SerializeField]
+    private float m_fahrwerksHoehe; 
+    public float FahrwerksHoehe { get { return m_fahrwerksHoehe; } } 
+
     private Vector3 ruheLage;
     [SerializeField]
     List<Transform> m_reifen = new List<Transform>();
     float time; 
-    public enum AchsenTyp //=> gehört in die klasse
+    public enum AchsenTyp 
     {
         Starr,
         Lenkbar
@@ -31,7 +35,7 @@ public class Achse : MonoBehaviour
                 float currentRotationY = x.localEulerAngles.y;
                 if (currentRotationY > 180)
                     currentRotationY -= 360;
-                float newRotationY = Mathf.Clamp(currentRotationY + rot, -5f, 5f);
+                float newRotationY = Mathf.Clamp(currentRotationY + rot, -90f, 90f);
                 x.localRotation = Quaternion.Euler(0, newRotationY, 0);
             } else //spieler gibt kein Input => Lenkrad geht zurück in die ausgangsposition
             {
@@ -60,6 +64,11 @@ public class Achse : MonoBehaviour
     public float BerechneFederkraft(float auslenkung)
     {
         return _federDaempfer.Feder * auslenkung;
+    }
+
+    public void SetFahrwerksHoehe(float val) 
+    {
+        m_fahrwerksHoehe = val; 
     }
 
     public float BerechneDaempfung(float relativeGeschwindigkeit) 

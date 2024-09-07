@@ -1,0 +1,40 @@
+1.	Variablen Management: 
+	
+	Werte die Einstellbar sein muessen Aufgrund von Anforderungen: 
+		Anzahl der Raeder(int): 
+			->	Im Script fuer das Game Designer Tool. 
+				->	Acces Modifyer private, public getter 
+		
+		
+		Poition der Raeder(Vector3): 
+			->	Im Script fuer das Game Designer Tool. 
+				->	Acces Modifyer private, public getter
+
+		
+		Feder- und Daempferkonstante(float)
+			->	Im Script fuer die Achsen
+				->	Acces Modifyer private, public getter
+					->	zusätzlich Setter function 
+
+
+		Die hoehe des Fahrwerks(float):
+			->	im Achsen Skript 
+				->	Access Modifyer private, public getter 
+					->	zusätzlich Setter function
+
+
+		FahrwerksTyp(Enum)
+			->	im Fahrwerk Script
+				->	Access Modifyer private
+					->	Setter function 
+					
+
+
+
+
+					
+			
+
+
+
+			
