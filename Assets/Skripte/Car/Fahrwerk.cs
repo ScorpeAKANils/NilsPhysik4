@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.UIElements;
 using UnityEngine;
 
 public class Fahrwerk : MonoBehaviour
@@ -19,12 +18,20 @@ public class Fahrwerk : MonoBehaviour
     private float reibungsKoeffizient = 0.8f;
     [SerializeField]
     List<FederDaempfer> m_reifen = new List<FederDaempfer>();
-    private float maxVel = 5    ;
+    [SerializeField]
+    float drehGeschwindigkeit = 0.75f;  
+    [SerializeField]
+    private float maxVel = 5f;
     private float inputVertical;
     private float inputHorizontal;
-    private Vector3 bewegung;
     public LayerMask ignore;
-    public AnimationCurve leistungsKurve; 
+    public AnimationCurve leistungsKurve;
+
+    [SerializeField]
+    private float lenkkraft = 10000f;
+
+    [SerializeField]
+    private float bremskraft = 15000f;
 
     public enum FahrwerksTyp
     {
@@ -34,8 +41,7 @@ public class Fahrwerk : MonoBehaviour
 
     private void Update()
     {
-        inputVertical = Input.GetAxis("Vertical");
-        inputHorizontal = Input.GetAxis("Horizontal");
+        HandleInput();
     }
 
     private void FixedUpdate()
@@ -43,104 +49,149 @@ public class Fahrwerk : MonoBehaviour
         UpdateFahrwerk();
     }
 
+    private void HandleInput()
+    {
+        inputVertical = Input.GetAxis("Vertical");
+        inputHorizontal = Input.GetAxis("Horizontal");
+    }
+
     void UpdateFahrwerk()
     {
         switch (_fahrwerksTyp)
         {
             case FahrwerksTyp.Radfahrwerk:
-                HandleRadKFZ(); 
+                HandleRadKFZ();
                 break;
-
             case FahrwerksTyp.Kettenfahrwerk:
-                HansBringSePanzerOhneFaustMagGoetheEhNichtSo(); 
+                HandleKettenKFZ();
                 break;
-
             default:
                 Debug.LogError("Unbekannter Fahrwerkstyp");
                 break;
         }
     }
 
-    void HandleRadKFZ() 
+    private void HandleRadKFZ()
     {
         foreach (var r in m_reifen)
         {
             if (inputVertical != 0)
-                Acceloration(r.transform, r.Achse);
+            {
+                Acceleration(r.transform, r.Achse);
+            }
+            
+            if(rb.velocity.magnitude > 0.1f && Input.GetKey(KeyCode.Space))
+            {
+                // Bremsen, wenn kein Gas gegeben wird
+                ApplyBrakes(r.transform);
+            }
 
             if (r.Achse.m_AchsenTyp == Achse.AchsenTyp.Lenkbar)
             {
-               r.Achse.RotateWheels(inputHorizontal, 5);
-            //this may be bullshit or i dont get it right: 
-                rb.AddTorque(Vector3.up * inputHorizontal * Time.deltaTime, ForceMode.VelocityChange);
+                r.Achse.RotateWheels(inputHorizontal, drehGeschwindigkeit);
+             
+                if(inputHorizontal > 0f) 
+                {
+                    AdjustVehicleRotation();
+                }
                 Lenkung(r.Achse, r.transform);
             }
-            //rb.AddForceAtPosition(r.transform.forward*bewegung.magnitude * inputVertical * _motorStärke * Time.fixedDeltaTime, r.transform.position);
         }
+
+        // Begrenzung der Geschwindigkeit
         if (rb.velocity.magnitude > maxVel)
         {
-            rb.velocity = Vector3.Lerp(rb.velocity, rb.velocity.normalized * maxVel, Time.fixedDeltaTime * 2f);
+            rb.velocity = rb.velocity.normalized * maxVel;
         }
     }
-
-    void HansBringSePanzerOhneFaustMagGoetheEhNichtSo() 
+    void HandleKettenKFZ()
     {
         Vector3 kraft = BewegungKettenfahrwerk();
         Vector3 kraftLinks = kraft;
         Vector3 kraftRechts = kraft;
+
         if (inputHorizontal > 0)
         {
-            kraftRechts *= -1;
+            kraftRechts *= (1 - Mathf.Abs(inputHorizontal));
         }
-        if (inputHorizontal < 0)
+        else if (inputHorizontal < 0)
         {
-            kraftLinks *= -1;
+            kraftLinks *= (1 - Mathf.Abs(inputHorizontal));
         }
 
-        rb.AddForceAtPosition(Time.fixedDeltaTime * kraftLinks, _achsen[0].transform.position);
-        rb.AddForceAtPosition(Time.fixedDeltaTime * kraftRechts, _achsen[1].transform.position);
+        rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftLinks), _achsen[0].transform.position, ForceMode.VelocityChange);
+        rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftRechts), _achsen[1].transform.position, ForceMode.VelocityChange);
     }
 
-    void Acceloration(Transform reifen, Achse achse) 
-    {
-            Vector3 dir = reifen.forward;
 
-            float geschwindigkeit = Vector3.Dot(this.transform.position, rb.velocity);
-            float velNormalized = Mathf.Clamp01(Mathf.Abs(geschwindigkeit) / maxVel);
-            float avaibleTorque = leistungsKurve.Evaluate(velNormalized) * inputVertical * _motorStärke;
-            rb.AddForceAtPosition(dir * avaibleTorque, reifen.position);
-    }
-    void Lenkung(Achse a, Transform reifen)
+    private void Acceleration(Transform reifen, Achse achse)
     {
-        bool hitSomething = Physics.Raycast(reifen.position, Vector3.down, a.FahrwerksHoehe, ~ignore);
-        if (hitSomething) 
+        Vector3 dir = reifen.forward; // Verwenden Sie die Vorwärtsrichtung des Fahrzeugs
+        float geschwindigkeit = Vector3.Dot(rb.velocity, transform.forward);
+        float velNormalized = Mathf.Clamp01(Mathf.Abs(geschwindigkeit) / maxVel);
+        float availableTorque = leistungsKurve.Evaluate(velNormalized) * inputVertical * _motorStärke;
+
+        rb.AddForceAtPosition(dir * availableTorque * Time.fixedDeltaTime, reifen.position, ForceMode.Acceleration);
+    }
+
+    private void ApplyBrakes(Transform reifen)
+    {
+        Vector3 bremseKraft = -rb.velocity.normalized * bremskraft;
+        rb.AddForceAtPosition(bremseKraft * Time.fixedDeltaTime, reifen.position, ForceMode.Acceleration);
+    }
+    Vector3 ClampShit(Vector3 value) 
+    {
+        //=> clampe shit um die größe der kräfte besser zu kontrollieren um somit ein stabileres verhalten zuerreichen
+        if(value.magnitude > maxVel) 
         {
-             float grip = 0.05f;
-             Vector2 lenkInput = new Vector2(inputHorizontal, inputVertical);
-            Vector3 lenkDir = new Vector3(lenkInput.x, 0, lenkInput.y).normalized; 
-             Vector3 reifenGeschwindigkeit = rb.GetPointVelocity(reifen.position);
-
-             float newVel = Vector3.Dot(lenkDir, reifenGeschwindigkeit);
-             float idealeBeschleunigung = -newVel * grip;
-
-             float beschleunigung = idealeBeschleunigung / Time.fixedDeltaTime;
-             float mass = reifen.GetComponent<FederDaempfer>().Mass;
-             //Debug.Log(lenkInput * mass * beschleunigung); 
-             rb.AddForceAtPosition(lenkDir  * mass *  beschleunigung * Time.fixedDeltaTime, reifen.position);
+            return value.normalized * maxVel; 
+        }
+        return value; 
+    }
+    private void Lenkung(Achse a, Transform reifen)
+    {
+        if (Physics.Raycast(reifen.position, Vector3.down, out RaycastHit hit, a.FahrwerksHoehe, ~ignore))
+        {
+            Vector3 lenkDir = transform.right * inputHorizontal;
+            Vector3 reifenGeschwindigkeit = rb.GetPointVelocity(hit.point);
+            Vector3 seitlicheGeschwindigkeit = Vector3.Project(reifenGeschwindigkeit, transform.right);
+            Vector3 korrekturKraft = -seitlicheGeschwindigkeit * lenkkraft;
+            rb.AddForceAtPosition(lenkDir * lenkkraft * Time.fixedDeltaTime, reifen.position, ForceMode.Force);
+            rb.AddForceAtPosition(korrekturKraft * Time.fixedDeltaTime, reifen.position, ForceMode.Force);
         }
     }
+    private void AdjustVehicleRotation()
+    {
+        if (Mathf.Abs(inputVertical) > 0.1f) // Nur anpassen, wenn der Spieler Gas gibt oder bremst
+        {
+            Vector3 intendedDirection = transform.forward * Mathf.Sign(inputVertical);
+            Vector3 currentVelocity = rb.velocity;
 
+            // Projizieren Sie die aktuelle Geschwindigkeit auf die beabsichtigte Richtung
+            Vector3 projectedVelocity = Vector3.Project(currentVelocity, intendedDirection);
+
+            // Berechnen Sie die gewünschte Richtung basierend auf der projizierten Geschwindigkeit
+            Vector3 desiredDirection = (projectedVelocity.magnitude > 1f) ? projectedVelocity.normalized : intendedDirection;
+
+            // Berechnen Sie die Zielrotation
+            Quaternion targetRotation = Quaternion.LookRotation(desiredDirection, transform.up);
+
+            // Wenden Sie eine sanfte Rotation an
+            float rotationSpeed = 2.5f; // Anpassen Sie diesen Wert nach Bedarf
+           this.transform.localRotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
+        }
+    }
     Vector3 BewegungKettenfahrwerk()
     {
-        Vector3 forceDirLeft = (transform.forward * inputVertical);
+        Vector3 forceDir = transform.forward * inputVertical;
         float normalKraft = rb.mass * Physics.gravity.magnitude;
         float reibungsKraft = reibungsKoeffizient * normalKraft;
         float traktionskraft = _motorStärke - reibungsKraft;
-        return forceDirLeft * traktionskraft * 3;
+        return forceDir * traktionskraft * 3;
     }
 
-    public void SetFahrwerk(Fahrwerk.FahrwerksTyp f) 
+    public void SetFahrwerk(Fahrwerk.FahrwerksTyp f)
     {
-        _fahrwerksTyp = f; 
+        _fahrwerksTyp = f;
     }
 }
