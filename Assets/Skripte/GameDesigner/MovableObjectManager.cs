@@ -47,7 +47,7 @@ public class MoveableObjectManager : MonoBehaviour
                 Vector3 mouseDir = (m_input-latestMousePos).normalized;
                 Debug.Log("MouseDir: " + mouseDir);
                 mouseDir.x = 0;
-                selectedObject.transform.localPosition += mouseDir * Time.deltaTime;
+                selectedObject.transform.position += mouseDir * Time.deltaTime;
             
         }
     }
