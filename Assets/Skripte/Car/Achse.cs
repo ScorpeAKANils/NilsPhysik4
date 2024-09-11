@@ -10,7 +10,7 @@ public class Achse : MonoBehaviour
     [SerializeField]
     private float m_fahrwerksHoehe;
     public float FahrwerksHoehe { get { return m_fahrwerksHoehe; } }
-
+    public GameObject Reifen; 
     private Vector3 ruheLage;
     [SerializeField]
     List<Transform> m_reifen = new List<Transform>();
@@ -25,7 +25,23 @@ public class Achse : MonoBehaviour
     {
         ruheLage = transform.position;
     }
+    public int GetWheelCount() 
+    {
+        return m_reifen.Count; 
+    }
+    public void AddNewWheel() 
+    {
+        var temp = Instantiate(m_reifen[0].gameObject, m_reifen[0].position + m_reifen[0].right, Quaternion.identity);
+        m_reifen.Add(temp.transform); 
 
+    }
+
+    public void RemoveWheele() 
+    {
+        var objToDelete = m_reifen[GetWheelCount() - 1];
+        m_reifen.Remove(objToDelete);
+        Destroy(objToDelete.gameObject); 
+    }
     public Vector3 BerechneDaempfungVektor(float daempfer, Vector3 geschwindigkeit)
     {
         // Berechne die Dämpfung für jede Achse proportional zur Geschwindigkeit

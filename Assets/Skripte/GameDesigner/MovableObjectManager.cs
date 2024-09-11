@@ -28,11 +28,15 @@ public class MoveableObjectManager : MonoBehaviour
         }
     }
 
-    private List<MovableObject> moveableObjects = new List<MovableObject>();
-    private MovableObject selectedObject;
+    private List<Selectable> moveableObjects = new List<Selectable>();
+    private Selectable selectedObject;
     private Vector3 m_input;
 
-
+    public void DeselectObject() 
+    {
+        selectedObject.isSelected = false;
+        selectedObject = null; 
+    }
     private void Update()
     {
         if (selectedObject == null)
@@ -62,7 +66,7 @@ public class MoveableObjectManager : MonoBehaviour
         latestMousePos = Camera.main.ScreenToWorldPoint(new Vector3(UnityEngine.Input.mousePosition.x,   UnityEngine.Input.mousePosition.y, objectZ));
     }
 
-    public void RegisterObject(MovableObject obj)
+    public void RegisterObject(Selectable obj)
     {
         if (!moveableObjects.Contains(obj))
         {
@@ -70,7 +74,7 @@ public class MoveableObjectManager : MonoBehaviour
         }
     }
 
-    public void UnregisterObject(MovableObject obj)
+    public void UnregisterObject(Selectable obj)
     {
         moveableObjects.Remove(obj);
         if (selectedObject == obj)
@@ -79,7 +83,7 @@ public class MoveableObjectManager : MonoBehaviour
         }
     }
 
-    public void SelectObject(MovableObject obj)
+    public void SelectObject(Selectable obj)
     {
         Debug.Log("added object: " + obj); 
         if (selectedObject != null)
@@ -90,7 +94,7 @@ public class MoveableObjectManager : MonoBehaviour
         selectedObject.isSelected = true;
     }
 
-    public MovableObject GetSelectedObject()
+    public Selectable GetSelectedObject()
     {
         return selectedObject;
     }
