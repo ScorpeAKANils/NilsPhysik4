@@ -41,6 +41,7 @@ public class MoveableObjectManager : MonoBehaviour
     {
         if (selectedObject == null)
         {
+            Debug.LogError("Deine Mutter"); 
             return;
         }
             float objectZ = Camera.main.WorldToScreenPoint(selectedObject.transform.position).z;
@@ -48,12 +49,11 @@ public class MoveableObjectManager : MonoBehaviour
 
         if (UnityEngine.Input.GetButton("Fire1"))
         {
-                Vector3 mouseDir = (m_input-latestMousePos).normalized;
-                Debug.Log("MouseDir: " + mouseDir);
-                mouseDir.x = 0;
-                selectedObject.transform.position += mouseDir * Time.deltaTime;
-            
-        }
+            Vector3 mouseDir = (m_input-latestMousePos).normalized;
+            Debug.Log("MouseDir: " + mouseDir);
+            mouseDir.x = 0;
+            selectedObject.transform.position += mouseDir * Time.deltaTime;
+          }
     }
 
     private void LateUpdate()
@@ -85,7 +85,7 @@ public class MoveableObjectManager : MonoBehaviour
 
     public void SelectObject(Selectable obj)
     {
-        Debug.Log("added object: " + obj); 
+        Debug.Log("Selected object: " + obj); 
         if (selectedObject != null)
         {
             selectedObject.isSelected = false;

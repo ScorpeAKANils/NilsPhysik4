@@ -46,6 +46,11 @@ public class Fahrwerk : MonoBehaviour
 
     private void FixedUpdate()
     {
+        var gdtool = EnableGameDesignerTool.instance; 
+        if (gdtool != null && gdtool.ToolEnabled == false) 
+        {
+            return; 
+        }
         UpdateFahrwerk();
     }
 
@@ -86,7 +91,7 @@ public class Fahrwerk : MonoBehaviour
                 ApplyBrakes(r.transform);
             }
 
-            if (r.Achse.m_AchsenTyp == Achse.AchsenTyp.Lenkbar)
+            if (r.Achse.m_AchsenTyp == Achse.AchsenTyp.Lenkbar)                                                                                                      
             {
                 r.Achse.RotateWheels(inputHorizontal, drehGeschwindigkeit);
              

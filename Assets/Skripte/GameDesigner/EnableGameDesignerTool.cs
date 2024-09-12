@@ -6,13 +6,14 @@ using UnityEngine.UIElements;
 public class EnableGameDesignerTool : MonoBehaviour
 {
     public static EnableGameDesignerTool instance; 
-    public bool ToolEnabled = true;
+    public bool ToolEnabled = false;
     public List<float> rectTransform = new List<float>();
-    bool mhallesdoof = true;
+    bool mhallesdoof = false;
     private string inputString = "0"; // Hier speicherst du die Eingabe als String
     private int inputValue = 0;
     public Fahrwerk Fahrwerk;
-    public Achse selectedAchse; 
+    public Achse selectedAchse;
+    public Vector3 SpawnPos; 
 
 
     private void Awake()
@@ -20,11 +21,9 @@ public class EnableGameDesignerTool : MonoBehaviour
         if(instance == null) 
         {
             instance = this;
-            DontDestroyOnLoad(this); 
-        }
-        else 
+        } else 
         {
-            Destroy(gameObject); 
+            Destroy(this.gameObject); 
         }
     }
     private void OnGUI()
@@ -66,15 +65,19 @@ public class EnableGameDesignerTool : MonoBehaviour
                     }
                     int wheelCount = selectedAchse.GetWheelCount(); 
                     int dif = inputValue - wheelCount;
+                    Debug.Log(dif); 
                     if(dif > 0) 
                     {
-                        for(int i = 0; i <= dif; i++ )
-                            selectedAchse.AddNewWheel(); 
+                        for(int i = 0; i < dif; i++ )
+                            selectedAchse.AddNewWheel(SpawnPos); 
                     }
-                    else if (dif > 0)
+                    else if (dif < 0)
                     {
-                        for (int i = 0; i <= Mathf.Abs(dif); i++)
+                        for (int i = 0; i < Mathf.Abs(dif); i++) 
+                        { 
                             selectedAchse.RemoveWheele();
+                            Debug.Log("removed wheel"); 
+                        }
                     }
                 }
                 else

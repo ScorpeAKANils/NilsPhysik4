@@ -14,6 +14,8 @@ public class Achse : MonoBehaviour
     private Vector3 ruheLage;
     [SerializeField]
     List<Transform> m_reifen = new List<Transform>();
+    [SerializeField]
+    Transform Carpos;
     float time;
     public enum AchsenTyp
     {
@@ -29,17 +31,38 @@ public class Achse : MonoBehaviour
     {
         return m_reifen.Count; 
     }
-    public void AddNewWheel() 
+    public void AddNewWheel(Vector3 SpawnPos)
     {
-        var temp = Instantiate(m_reifen[0].gameObject, m_reifen[0].position + m_reifen[0].right, Quaternion.identity);
-        m_reifen.Add(temp.transform); 
-
+        if(SpawnPos == new Vector3(-999, -999, -999)) 
+        {
+            Debug.LogError("Invalid Vector"); 
+            return;
+        }
+        var temp = Instantiate(m_reifen[0].gameObject, SpawnPos, m_reifen[0].rotation);
+        temp.transform.localScale = m_reifen[0].lossyScale; 
+        temp.transform.parent = this.transform;
+        m_reifen.Add(temp.transform);
     }
 
+    private Vector3 CalculateWheelSpawnPosition()
+    {
+        Vector3 cameraPosition = Camera.main.transform.position;
+        Vector3 directionToCamera = (cameraPosition - transform.position).normalized;
+        float distanceFromObject = 1.0f;
+        Vector3 spawnPosition = transform.position + directionToCamera * distanceFromObject;
+
+        return spawnPosition;
+    }
+
+    Vector3 CalculateSpawnPos() 
+    {
+        return transform.position; 
+    }
     public void RemoveWheele() 
     {
         var objToDelete = m_reifen[GetWheelCount() - 1];
         m_reifen.Remove(objToDelete);
+        Debug.Log(objToDelete.gameObject.name); 
         Destroy(objToDelete.gameObject); 
     }
     public Vector3 BerechneDaempfungVektor(float daempfer, Vector3 geschwindigkeit)

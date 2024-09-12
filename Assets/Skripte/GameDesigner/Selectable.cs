@@ -6,13 +6,19 @@ public class Selectable : MonoBehaviour
 {
     [HideInInspector]
     public bool isSelected = false;
-    public Material IsSelected;
-    public Material IsDeselected;
+    public Material Selected;
+    public Material Deselected;
     public Achse m_Achse; 
     private MeshRenderer m_meshRenderer;
     [SerializeField]
-    private LayerMask layer; 
-
+    private LayerMask layer;
+    [SerializeField]
+    private SelectableType type; 
+    public enum SelectableType 
+    {
+        Reifen, 
+        Achse
+    }
     private void Start()
     {
         m_meshRenderer = GetComponent<MeshRenderer>();
@@ -21,9 +27,9 @@ public class Selectable : MonoBehaviour
 
     private void Update()
     {
-        if(!IsSelected && m_meshRenderer.material != IsDeselected) 
+        if(!isSelected && m_meshRenderer.material != Deselected) 
         {
-            m_meshRenderer.material = IsDeselected;  
+            m_meshRenderer.material = Deselected;  
         }
     }
     private void OnDestroy()
@@ -41,17 +47,35 @@ public class Selectable : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         //
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layer) && hit.transform == this.transform && !isSelected) 
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layer) && hit.transform == this.transform) 
         {
-            Debug.Log(hit.transform.name); 
-            if(m_Achse == null) 
+            Debug.Log(hit.transform.name);
+            if (type == Selectable.SelectableType.Reifen && !isSelected) 
             {
                  MoveableObjectManager.Instance.SelectObject(this);
-                 m_meshRenderer.material = IsSelected;
+                Debug.Log("Achse gleich true"); 
+                 m_meshRenderer.material = Selected;
             } else 
             {
-                EnableGameDesignerTool.instance.selectedAchse = m_Achse;
-                m_meshRenderer.material = IsSelected;
+                Debug.Log("Cool af ");
+                if (!isSelected) 
+                {
+                    Debug.Log("Aktiviere shit my man bro diggah waz up");
+                    isSelected = true;
+                    EnableGameDesignerTool.instance.selectedAchse = m_Achse;
+                    EnableGameDesignerTool.instance.SpawnPos = this.gameObject.transform.position; 
+                    m_meshRenderer.material = Selected;
+                    return; 
+                } 
+                if(isSelected)
+                {
+                    Debug.Log("Deaktiviere shit my man bro diggah waz up"); 
+                    isSelected = false;
+                    EnableGameDesignerTool.instance.selectedAchse = null;
+                    EnableGameDesignerTool.instance.SpawnPos = new Vector3(-999, -999, -999);
+                    m_meshRenderer.material = Deselected;
+                }
+
             }
         } 
     }
@@ -59,10 +83,10 @@ public class Selectable : MonoBehaviour
     private void OnMouseUp()
     {
         Debug.Log("Mouse Up"); 
-        if (isSelected)
+        if (isSelected && type == Selectable.SelectableType.Reifen)
         {
             MoveableObjectManager.Instance.DeselectObject();
-            m_meshRenderer.material = IsDeselected;
+            m_meshRenderer.material = Deselected;
         }
     }
 }
