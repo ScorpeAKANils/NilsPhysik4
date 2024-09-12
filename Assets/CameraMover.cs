@@ -11,28 +11,33 @@ public class CameraMover : MonoBehaviour
     [SerializeField]
     Quaternion TargetRotation;
     [SerializeField]
-    Vector3 TargetPos;
+    Vector3 TargetPos; 
     public static CameraMover instance;
+    public bool inGame = true; 
 
     private void Awake()
     {
-        instance = this; 
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        InitRot = transform.localRotation; 
+        instance = this;
+        InitRot = transform.localRotation;
         InitPos = transform.localPosition;
     }
     public void MoveCamToEditorPos() 
     {
-        transform.localRotation = TargetRotation;
-        transform.localPosition = TargetPos; 
+        if(inGame == true) 
+        {
+            inGame = false; 
+            transform.localRotation = TargetRotation;
+            transform.localPosition = TargetPos; 
+        }
     }
 
     public void MoveCamToGamePos()
     {
-        transform.localRotation = InitRot;
-        transform.localPosition = InitPos;
+        if (inGame == false) 
+        {
+            inGame = true; 
+            transform.localRotation = InitRot;
+            transform.localPosition = InitPos;
+        }
     }
 }

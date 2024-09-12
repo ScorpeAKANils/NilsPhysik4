@@ -13,8 +13,7 @@ public class EnableGameDesignerTool : MonoBehaviour
     private int inputValue = 0;
     public Fahrwerk Fahrwerk;
     public Achse selectedAchse;
-    public Vector3 SpawnPos; 
-
+    public Vector3 SpawnPos;
 
     private void Awake()
     {
@@ -98,15 +97,14 @@ public class EnableGameDesignerTool : MonoBehaviour
             GUI.Label(new Rect(10, 200, 200, 30), "Current value: " + inputValue);
             if (GUI.Button(new Rect(10, 240, 100, 30), "Switch Side"))
             {
+                Debug.Log("Ah, deine Schockoladenseite"); 
                 var cam = Camera.main.gameObject.transform;
-                Vector3 newPos = cam.position;
-                Quaternion newRot = cam.rotation;
-                newPos.x = newPos.x * -1; 
-                transform.position = newPos;
-                newRot.y = newRot.y * -1;
-                transform.rotation = newRot; 
-
+                Vector3 direction = cam.position - transform.position;
+                direction = new Vector3(-direction.x, direction.y, direction.z);
+                cam.position = transform.position + direction;
+                cam.LookAt(transform.position);
             }
+
         }
 
     }
