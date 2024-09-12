@@ -86,6 +86,18 @@ public class EnableGameDesignerTool : MonoBehaviour
                 }
             }
             GUI.Label(new Rect(10, 200, 200, 30), "Current value: " + inputValue);
+            if (GUI.Button(new Rect(10, 240, 100, 30), "Switch Side"))
+            {
+                var cam = Camera.main.gameObject.transform;
+                Vector3 newPos = cam.position;
+                Quaternion newRot = cam.rotation;
+                newPos.x = newPos.x * -1; 
+                transform.position = newPos;
+                newRot.y = newRot.y * -1;
+                transform.rotation = newRot; 
+
+            }
         }
+
     }
 }

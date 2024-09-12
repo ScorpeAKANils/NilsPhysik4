@@ -335,11 +335,27 @@ PrefabInstance:
     - target: {fileID: 5116534534804699630, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_Achse
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1271806878}
+    - target: {fileID: 5116534534804699630, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Selected
+      value: 
+      objectReference: {fileID: 2100000, guid: d74cd6286d604414bbee9de87f4c5508, type: 2}
+    - target: {fileID: 5116534534804699630, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Deselected
+      value: 
+      objectReference: {fileID: 2100000, guid: 26abfb41fd761094bba02cf230010cf4, type: 2}
     - target: {fileID: 5116534535138595176, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5116534535138595176, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Selected
+      value: 
+      objectReference: {fileID: 2100000, guid: d74cd6286d604414bbee9de87f4c5508, type: 2}
+    - target: {fileID: 5116534535138595176, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Deselected
+      value: 
+      objectReference: {fileID: 2100000, guid: 26abfb41fd761094bba02cf230010cf4, type: 2}
     - target: {fileID: 5116534535138595191, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.6
@@ -400,10 +416,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: RadFahrzeug
       objectReference: {fileID: 0}
+    - target: {fileID: 5116534535695556786, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.19
+      objectReference: {fileID: 0}
     - target: {fileID: 5116534536026955507, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_Achse
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 707598794}
+    - target: {fileID: 5116534536026955507, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Selected
+      value: 
+      objectReference: {fileID: 2100000, guid: d74cd6286d604414bbee9de87f4c5508, type: 2}
+    - target: {fileID: 5116534536026955507, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Deselected
+      value: 
+      objectReference: {fileID: 2100000, guid: 26abfb41fd761094bba02cf230010cf4, type: 2}
     - target: {fileID: 5116534536026955516, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_achse
       value: 
@@ -411,7 +439,15 @@ PrefabInstance:
     - target: {fileID: 5116534536037081128, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_Achse
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1271806878}
+    - target: {fileID: 5116534536037081128, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Selected
+      value: 
+      objectReference: {fileID: 2100000, guid: d74cd6286d604414bbee9de87f4c5508, type: 2}
+    - target: {fileID: 5116534536037081128, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Deselected
+      value: 
+      objectReference: {fileID: 2100000, guid: 26abfb41fd761094bba02cf230010cf4, type: 2}
     - target: {fileID: 5116534536037081140, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_achse
       value: 
@@ -423,7 +459,15 @@ PrefabInstance:
     - target: {fileID: 5116534536197694046, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_Achse
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 707598794}
+    - target: {fileID: 5116534536197694046, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Selected
+      value: 
+      objectReference: {fileID: 2100000, guid: d74cd6286d604414bbee9de87f4c5508, type: 2}
+    - target: {fileID: 5116534536197694046, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Deselected
+      value: 
+      objectReference: {fileID: 2100000, guid: 26abfb41fd761094bba02cf230010cf4, type: 2}
     - target: {fileID: 5116534536511912278, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: Reifen
       value: 
@@ -436,6 +480,14 @@ PrefabInstance:
       propertyPath: type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5116534536787301694, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Selected
+      value: 
+      objectReference: {fileID: 2100000, guid: d74cd6286d604414bbee9de87f4c5508, type: 2}
+    - target: {fileID: 5116534536787301694, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: Deselected
+      value: 
+      objectReference: {fileID: 2100000, guid: 26abfb41fd761094bba02cf230010cf4, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
 --- !u!1 &227375414
@@ -2030,6 +2082,7 @@ MonoBehaviour:
   rectTransform: []
   Fahrwerk: {fileID: 0}
   selectedAchse: {fileID: 0}
+  SpawnPos: {x: 0, y: 0, z: 0}
 --- !u!1 &1444715161
 GameObject:
   m_ObjectHideFlags: 0
