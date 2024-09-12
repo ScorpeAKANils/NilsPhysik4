@@ -13,7 +13,7 @@ public class Selectable : MonoBehaviour
     [SerializeField]
     private LayerMask layer;
     [SerializeField]
-    private SelectableType type; 
+    private SelectableType type;
     public enum SelectableType 
     {
         Reifen, 
@@ -63,7 +63,6 @@ public class Selectable : MonoBehaviour
                     Debug.Log("Aktiviere shit my man bro diggah waz up");
                     isSelected = true;
                     EnableGameDesignerTool.instance.selectedAchse = m_Achse;
-                    EnableGameDesignerTool.instance.SpawnPos = this.gameObject.transform.position; 
                     m_meshRenderer.material = Selected;
                     return; 
                 } 

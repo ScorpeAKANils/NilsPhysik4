@@ -34,11 +34,13 @@ public class EnableGameDesignerTool : MonoBehaviour
         if (mhallesdoof)
         {
             GUI.Label(new Rect(10, 50, 200, 30), "WheelTool enabled!");
+            CameraMover.instance.MoveCamToEditorPos(); 
             ToolEnabled = true;
         }
         else
         {
             GUI.Label(new Rect(10, 50, 200, 30), "WheelTool disabled!");
+            CameraMover.instance.MoveCamToGamePos(); 
             ToolEnabled = false;
         }
 
@@ -68,8 +70,16 @@ public class EnableGameDesignerTool : MonoBehaviour
                     Debug.Log(dif); 
                     if(dif > 0) 
                     {
-                        for(int i = 0; i < dif; i++ )
-                            selectedAchse.AddNewWheel(SpawnPos); 
+                        int sideIndex = 0; 
+                        for(int i = 0; i < dif; i++) 
+                        {
+                            if(sideIndex > 1) 
+                            {
+                                sideIndex = 0; 
+                            }
+                            selectedAchse.AddNewWheel(selectedAchse.Selectables[sideIndex].position);
+                            sideIndex++; 
+                        }
                     }
                     else if (dif < 0)
                     {

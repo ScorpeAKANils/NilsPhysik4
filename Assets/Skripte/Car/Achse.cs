@@ -17,6 +17,7 @@ public class Achse : MonoBehaviour
     [SerializeField]
     Transform Carpos;
     float time;
+    public List<Transform> Selectables; 
     public enum AchsenTyp
     {
         Starr,
