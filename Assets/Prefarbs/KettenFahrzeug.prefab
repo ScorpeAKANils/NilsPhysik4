@@ -265,12 +265,12 @@ GameObject:
   - component: {fileID: 3134187282224543872}
   - component: {fileID: 3134187282224543874}
   m_Layer: 0
-  m_Name: KettenFahrzeug (1)
+  m_Name: KettenFahrzeug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3134187282224543929
 Transform:
   m_ObjectHideFlags: 0
@@ -653,6 +653,7 @@ MonoBehaviour:
   Reifen: {fileID: 0}
   m_reifen: []
   Carpos: {fileID: 0}
+  Selectables: []
 --- !u!1 &3134187283260371002
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,3 +705,4 @@ MonoBehaviour:
   Reifen: {fileID: 0}
   m_reifen: []
   Carpos: {fileID: 0}
+  Selectables: []

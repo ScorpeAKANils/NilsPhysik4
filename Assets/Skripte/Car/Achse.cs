@@ -17,7 +17,8 @@ public class Achse : MonoBehaviour
     [SerializeField]
     Transform Carpos;
     float time;
-    public List<Transform> Selectables; 
+    public List<Transform> Selectables;
+    public Fahrwerk fahrwerk; 
     public enum AchsenTyp
     {
         Starr,
@@ -75,23 +76,20 @@ public class Achse : MonoBehaviour
 
     public void RotateWheels(float input, float drehgeschwindigkeit)
     {
-        float radstand = 2.5f;
-        float spurweite = 1.5f; //Werte sind nur ausgedachte test werte 
-
+        float radstand = (fahrwerk._achsen[0].transform.position - fahrwerk._achsen[1].transform.position).magnitude;
+        float spurweite = (m_reifen[0].position - m_reifen[1].position).magnitude;
         foreach (var x in m_reifen)
         {
-            if (input != 0)
+            if (Mathf.Abs(input) > 0.1f)
             {
                 bool istLinkesRad = x.name == "ReifenLV";
                 bool istRechtesRad = x.name == "ReifenRV";
 
-
                 float innerRadius = radstand / Mathf.Tan(input);
-                float outerRadius = innerRadius + spurweite;
+                float outerRadius = Mathf.Abs(innerRadius) + spurweite * Mathf.Sign(innerRadius);
 
-                float innerAngle = Mathf.Rad2Deg * Mathf.Atan(radstand / innerRadius);
-                float outerAngle = Mathf.Rad2Deg * Mathf.Atan(radstand / outerRadius);
-
+                float innerAngle = Mathf.Sign(input) * Mathf.Rad2Deg * Mathf.Atan(radstand / Mathf.Abs(innerRadius));
+                float outerAngle = Mathf.Sign(input) * Mathf.Rad2Deg * Mathf.Atan(radstand / Mathf.Abs(outerRadius));
                 float targetAngle = 0f;
                 if (istLinkesRad)
                 {
@@ -101,19 +99,22 @@ public class Achse : MonoBehaviour
                 {
                     targetAngle = (input > 0) ? outerAngle : innerAngle;
                 }
-                targetAngle = Mathf.Clamp(targetAngle, -35, 35f);
-
+                targetAngle = Mathf.Clamp(targetAngle, -35f, 35f);
                 float newRotationY = Mathf.LerpAngle(x.transform.localEulerAngles.y, targetAngle, Time.deltaTime * drehgeschwindigkeit);
                 x.localRotation = Quaternion.Euler(0, newRotationY, 90);
-
             }
             else
             {
+
                 float resetRot = Mathf.LerpAngle(x.localEulerAngles.y, 0, Time.deltaTime * drehgeschwindigkeit);
                 x.localRotation = Quaternion.Euler(0, resetRot, 90);
             }
         }
     }
+
+
+
+
 
 
 

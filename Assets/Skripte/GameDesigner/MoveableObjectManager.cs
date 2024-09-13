@@ -41,7 +41,6 @@ public class MoveableObjectManager : MonoBehaviour
     {
         if (selectedObject == null)
         {
-            Debug.LogError("Deine Mutter"); 
             return;
         }
             float objectZ = Camera.main.WorldToScreenPoint(selectedObject.transform.position).z;
@@ -50,9 +49,8 @@ public class MoveableObjectManager : MonoBehaviour
         if (UnityEngine.Input.GetButton("Fire1"))
         {
             Vector3 mouseDir = (m_input-latestMousePos).normalized;
-            Debug.Log("MouseDir: " + mouseDir);
             mouseDir.x = 0;
-            selectedObject.transform.position += mouseDir * Time.deltaTime;
+            selectedObject.transform.position += mouseDir * 8 * Time.deltaTime;
           }
     }
 

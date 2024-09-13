@@ -53,7 +53,7 @@ public class Selectable : MonoBehaviour
             if (type == Selectable.SelectableType.Reifen && !isSelected) 
             {
                  MoveableObjectManager.Instance.SelectObject(this);
-                Debug.Log("Achse gleich true"); 
+                Debug.Log("Achse ist existent. F an den Bre"); 
                  m_meshRenderer.material = Selected;
             } else 
             {

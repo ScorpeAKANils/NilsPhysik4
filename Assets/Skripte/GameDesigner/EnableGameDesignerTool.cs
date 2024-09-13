@@ -33,6 +33,7 @@ public class EnableGameDesignerTool : MonoBehaviour
         if (mhallesdoof)
         {
             GUI.Label(new Rect(10, 50, 200, 30), "WheelTool enabled!");
+
             CameraMover.instance.MoveCamToEditorPos(); 
             ToolEnabled = true;
         }

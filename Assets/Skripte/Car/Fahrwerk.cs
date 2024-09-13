@@ -7,7 +7,7 @@ public class Fahrwerk : MonoBehaviour
     [SerializeField]
     private int AnzahlAchsen;
     [SerializeField]
-    private List<Achse> _achsen = new List<Achse>();
+    public List<Achse> _achsen = new List<Achse>();
     [SerializeField]
     private FahrwerksTyp _fahrwerksTyp;
     [SerializeField]
@@ -47,8 +47,9 @@ public class Fahrwerk : MonoBehaviour
     private void FixedUpdate()
     {
         var gdtool = EnableGameDesignerTool.instance; 
-        if (gdtool != null && gdtool.ToolEnabled == false) 
+        if (gdtool != null && gdtool.ToolEnabled == true) 
         {
+            Debug.Log("Ok Cool"); 
             return; 
         }
         UpdateFahrwerk();
@@ -84,69 +85,71 @@ public class Fahrwerk : MonoBehaviour
             {
                 Acceleration(r.transform, r.Achse);
             }
-            
-            if(rb.velocity.magnitude > 0.1f && Input.GetKey(KeyCode.Space))
+
+            if (rb.velocity.magnitude > 0.1f && Input.GetKey(KeyCode.Space))
             {
-                // Bremsen, wenn kein Gas gegeben wird
-                ApplyBrakes(r.transform);
+               ApplyBrakes(r.transform);
             }
 
-            if (r.Achse.m_AchsenTyp == Achse.AchsenTyp.Lenkbar)                                                                                                      
+            if (r.Achse.m_AchsenTyp == Achse.AchsenTyp.Lenkbar)
             {
+                
                 r.Achse.RotateWheels(inputHorizontal, drehGeschwindigkeit);
-             
-                if(inputHorizontal > 0f) 
+                if (inputHorizontal != 0f)
                 {
                     AdjustVehicleRotation();
                 }
-                Lenkung(r.Achse, r.transform);
+                //Lenkung(r.Achse, r.transform);
             }
         }
-
-        // Begrenzung der Geschwindigkeit
         if (rb.velocity.magnitude > maxVel)
         {
             rb.velocity = rb.velocity.normalized * maxVel;
         }
     }
+
     void HandleKettenKFZ()
     {
         Vector3 kraft = BewegungKettenfahrwerk();
         Vector3 kraftLinks = kraft;
         Vector3 kraftRechts = kraft;
 
-        if (inputHorizontal > 0)
+        if (Mathf.Abs(inputHorizontal) > 0.01f)
         {
-            kraftRechts *= (1 - Mathf.Abs(inputHorizontal));
-        }
-        else if (inputHorizontal < 0)
-        {
-            kraftLinks *= (1 - Mathf.Abs(inputHorizontal));
+            if (inputHorizontal > 0)
+            {
+                kraftRechts *= (1 - Mathf.Abs(inputHorizontal));
+            }
+            else if (inputHorizontal < 0)
+            {
+                kraftLinks *= (1 - Mathf.Abs(inputHorizontal));
+            }
         }
 
-        rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftLinks), _achsen[0].transform.position, ForceMode.VelocityChange);
-        rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftRechts), _achsen[1].transform.position, ForceMode.VelocityChange);
+        rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftLinks), _achsen[0].transform.position, ForceMode.Acceleration);
+        rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftRechts), _achsen[1].transform.position, ForceMode.Acceleration);
     }
 
 
     private void Acceleration(Transform reifen, Achse achse)
     {
-        Vector3 dir = reifen.forward; // Verwenden Sie die Vorwärtsrichtung des Fahrzeugs
+        Vector3 dir = reifen.forward;
+        if(reifen.name == "ReifenLV")
+            Debug.Log(reifen.forward);
         float geschwindigkeit = Vector3.Dot(rb.velocity, transform.forward);
         float velNormalized = Mathf.Clamp01(Mathf.Abs(geschwindigkeit) / maxVel);
         float availableTorque = leistungsKurve.Evaluate(velNormalized) * inputVertical * _motorStärke;
-
+        Debug.Log("Speeing up lan: " + dir * availableTorque * Time.fixedDeltaTime); 
         rb.AddForceAtPosition(dir * availableTorque * Time.fixedDeltaTime, reifen.position, ForceMode.Acceleration);
     }
 
     private void ApplyBrakes(Transform reifen)
     {
         Vector3 bremseKraft = -rb.velocity.normalized * bremskraft;
-        rb.AddForceAtPosition(bremseKraft * Time.fixedDeltaTime, reifen.position, ForceMode.Acceleration);
+        rb.AddForceAtPosition(bremseKraft * Time.fixedDeltaTime, reifen.position, ForceMode.Impulse);
     }
     Vector3 ClampShit(Vector3 value) 
     {
-        //=> clampe shit um die größe der kräfte besser zu kontrollieren um somit ein stabileres verhalten zuerreichen
         if(value.magnitude > maxVel) 
         {
             return value.normalized * maxVel; 
@@ -157,35 +160,33 @@ public class Fahrwerk : MonoBehaviour
     {
         if (Physics.Raycast(reifen.position, Vector3.down, out RaycastHit hit, a.FahrwerksHoehe, ~ignore))
         {
-            Vector3 lenkDir = transform.right * inputHorizontal;
+            float geschwindigkeitsFaktor = Mathf.Clamp(rb.velocity.magnitude, 0.5f, 2f);
+            Vector3 lenkDir = transform.right * inputHorizontal * geschwindigkeitsFaktor;
+
             Vector3 reifenGeschwindigkeit = rb.GetPointVelocity(hit.point);
             Vector3 seitlicheGeschwindigkeit = Vector3.Project(reifenGeschwindigkeit, transform.right);
-            Vector3 korrekturKraft = -seitlicheGeschwindigkeit * lenkkraft;
-            rb.AddForceAtPosition(lenkDir * lenkkraft * Time.fixedDeltaTime, reifen.position, ForceMode.Force);
-            rb.AddForceAtPosition(korrekturKraft * Time.fixedDeltaTime, reifen.position, ForceMode.Force);
+            Vector3 korrekturKraft = -seitlicheGeschwindigkeit * lenkkraft * geschwindigkeitsFaktor;
+            //rb.AddForceAtPosition(lenkDir * lenkkraft * Time.fixedDeltaTime, reifen.position, ForceMode.Impulse);
+            //rb.AddForceAtPosition(korrekturKraft * Time.fixedDeltaTime, reifen.position, ForceMode.Impulse);
         }
     }
+
+
     private void AdjustVehicleRotation()
     {
-        if (Mathf.Abs(inputVertical) > 0.1f) // Nur anpassen, wenn der Spieler Gas gibt oder bremst
+        if (Mathf.Abs(inputVertical) > 0.01f)
         {
             Vector3 intendedDirection = transform.forward * Mathf.Sign(inputVertical);
             Vector3 currentVelocity = rb.velocity;
-
-            // Projizieren Sie die aktuelle Geschwindigkeit auf die beabsichtigte Richtung
             Vector3 projectedVelocity = Vector3.Project(currentVelocity, intendedDirection);
-
-            // Berechnen Sie die gewünschte Richtung basierend auf der projizierten Geschwindigkeit
             Vector3 desiredDirection = (projectedVelocity.magnitude > 1f) ? projectedVelocity.normalized : intendedDirection;
-
-            // Berechnen Sie die Zielrotation
             Quaternion targetRotation = Quaternion.LookRotation(desiredDirection, transform.up);
+            float rotationSpeed = 2.5f;
 
-            // Wenden Sie eine sanfte Rotation an
-            float rotationSpeed = 2.5f; // Anpassen Sie diesen Wert nach Bedarf
-           this.transform.localRotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
+            this.transform.localRotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
         }
     }
+
     Vector3 BewegungKettenfahrwerk()
     {
         Vector3 forceDir = transform.forward * inputVertical;
