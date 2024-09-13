@@ -78,6 +78,7 @@ public class Achse : MonoBehaviour
     {
         float radstand = (fahrwerk._achsen[0].transform.position - fahrwerk._achsen[1].transform.position).magnitude;
         float spurweite = (m_reifen[0].position - m_reifen[1].position).magnitude;
+
         foreach (var x in m_reifen)
         {
             if (Mathf.Abs(input) > 0.1f)
@@ -91,6 +92,7 @@ public class Achse : MonoBehaviour
                 float innerAngle = Mathf.Sign(input) * Mathf.Rad2Deg * Mathf.Atan(radstand / Mathf.Abs(innerRadius));
                 float outerAngle = Mathf.Sign(input) * Mathf.Rad2Deg * Mathf.Atan(radstand / Mathf.Abs(outerRadius));
                 float targetAngle = 0f;
+
                 if (istLinkesRad)
                 {
                     targetAngle = (input > 0) ? innerAngle : outerAngle;
@@ -99,26 +101,22 @@ public class Achse : MonoBehaviour
                 {
                     targetAngle = (input > 0) ? outerAngle : innerAngle;
                 }
+
                 targetAngle = Mathf.Clamp(targetAngle, -35f, 35f);
                 float newRotationY = Mathf.LerpAngle(x.transform.localEulerAngles.y, targetAngle, Time.deltaTime * drehgeschwindigkeit);
                 x.localRotation = Quaternion.Euler(0, newRotationY, 90);
             }
             else
             {
-
-                float resetRot = Mathf.LerpAngle(x.localEulerAngles.y, 0, Time.deltaTime * drehgeschwindigkeit);
-                x.localRotation = Quaternion.Euler(0, resetRot, 90);
+                if(Mathf.Abs(x.localEulerAngles.y) > 0.05f) 
+                {
+                    float resetRot = Mathf.LerpAngle(x.localEulerAngles.y, 0, Time.deltaTime * drehgeschwindigkeit);
+                    x.localRotation = Quaternion.Euler(0, resetRot, 90);
+                }
             }
         }
     }
-
-
-
-
-
-
-
-
+    
     public float UpdateAchse(Rigidbody rb, Transform reifen)
     {
         float auslenkung = BerechneAuslenkung();

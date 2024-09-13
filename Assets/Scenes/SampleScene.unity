@@ -477,6 +477,10 @@ PrefabInstance:
       propertyPath: m_achse
       value: 
       objectReference: {fileID: 1963137555}
+    - target: {fileID: 4187154654972079588, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: m_feder
+      value: 650
+      objectReference: {fileID: 0}
     - target: {fileID: 4977994082833917002, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.6
@@ -495,19 +499,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5116534534804699627, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 0.6801609
       objectReference: {fileID: 0}
     - target: {fileID: 5116534534804699627, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 0.038249392
       objectReference: {fileID: 0}
     - target: {fileID: 5116534534804699627, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 0.18786278
       objectReference: {fileID: 0}
     - target: {fileID: 5116534534804699627, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5116534534804699627, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_LocalRotation.x
@@ -519,16 +523,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5116534534804699627, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5116534534804699627, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 5116534534804699628, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_achse
       value: 
       objectReference: {fileID: 1271806878}
+    - target: {fileID: 5116534534804699628, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: m_feder
+      value: 650
+      objectReference: {fileID: 0}
     - target: {fileID: 5116534534804699630, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_Achse
       value: 
@@ -639,7 +647,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5116534535500854391, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: maxVel
-      value: 0.33
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5116534535500854391, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: "_motorSt\xE4rke"
+      value: 6000
       objectReference: {fileID: 0}
     - target: {fileID: 5116534535500854391, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: _achsen.Array.size
@@ -648,6 +660,10 @@ PrefabInstance:
     - target: {fileID: 5116534535500854391, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: drehGeschwindigkeit
       value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 5116534535500854391, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: reibungsKoeffizient
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 5116534535500854391, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: _achsen.Array.data[1]
@@ -817,6 +833,10 @@ PrefabInstance:
       propertyPath: m_achse
       value: 
       objectReference: {fileID: 1271806878}
+    - target: {fileID: 5116534536037081140, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: m_feder
+      value: 650
+      objectReference: {fileID: 0}
     - target: {fileID: 5116534536197694044, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_achse
       value: 
@@ -933,6 +953,10 @@ PrefabInstance:
       propertyPath: m_achse
       value: 
       objectReference: {fileID: 1963137555}
+    - target: {fileID: 8123748673762772732, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
+      propertyPath: m_feder
+      value: 650
+      objectReference: {fileID: 0}
     - target: {fileID: 8916435662526684937, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
       propertyPath: m_Name
       value: Reifen
@@ -994,6 +1018,9 @@ MonoBehaviour:
   ignore:
     serializedVersion: 2
     m_Bits: 0
+  maxSchlupf: 0.2
+  seitenschub: 5000
+  laengsschub: 5000
 --- !u!1 &268474081 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5116534536037081138, guid: 4813a38646e470b4b882fdc9f5776362, type: 3}
@@ -1284,6 +1311,9 @@ MonoBehaviour:
   ignore:
     serializedVersion: 2
     m_Bits: 0
+  maxSchlupf: 0.2
+  seitenschub: 5000
+  laengsschub: 5000
 --- !u!4 &507719568
 Transform:
   m_ObjectHideFlags: 0
@@ -1960,6 +1990,9 @@ MonoBehaviour:
   ignore:
     serializedVersion: 2
     m_Bits: 0
+  maxSchlupf: 0.2
+  seitenschub: 5000
+  laengsschub: 5000
 --- !u!1 &1116713658
 GameObject:
   m_ObjectHideFlags: 0
@@ -3468,6 +3501,9 @@ MonoBehaviour:
   ignore:
     serializedVersion: 2
     m_Bits: 0
+  maxSchlupf: 0.2
+  seitenschub: 5000
+  laengsschub: 5000
 --- !u!1 &1785721965
 GameObject:
   m_ObjectHideFlags: 0
@@ -3800,6 +3836,9 @@ MonoBehaviour:
   ignore:
     serializedVersion: 2
     m_Bits: 0
+  maxSchlupf: 0.2
+  seitenschub: 5000
+  laengsschub: 5000
 --- !u!4 &1959006918
 Transform:
   m_ObjectHideFlags: 0
@@ -3885,3 +3924,6 @@ MonoBehaviour:
   ignore:
     serializedVersion: 2
     m_Bits: 0
+  maxSchlupf: 0.2
+  seitenschub: 5000
+  laengsschub: 5000

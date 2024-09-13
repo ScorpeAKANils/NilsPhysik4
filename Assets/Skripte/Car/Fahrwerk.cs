@@ -88,20 +88,21 @@ public class Fahrwerk : MonoBehaviour
 
             if (rb.velocity.magnitude > 0.1f && Input.GetKey(KeyCode.Space))
             {
-               ApplyBrakes(r.transform);
+                ApplyBrakes(r.transform);
             }
 
             if (r.Achse.m_AchsenTyp == Achse.AchsenTyp.Lenkbar)
             {
-                
+                // Angepasste Lenkung mit Reifen-Schlupf
                 r.Achse.RotateWheels(inputHorizontal, drehGeschwindigkeit);
                 if (inputHorizontal != 0f)
                 {
                     AdjustVehicleRotation();
                 }
-                //Lenkung(r.Achse, r.transform);
             }
         }
+
+        // Geschwindigkeit begrenzen
         if (rb.velocity.magnitude > maxVel)
         {
             rb.velocity = rb.velocity.normalized * maxVel;
@@ -179,10 +180,12 @@ public class Fahrwerk : MonoBehaviour
             Vector3 intendedDirection = transform.forward * Mathf.Sign(inputVertical);
             Vector3 currentVelocity = rb.velocity;
             Vector3 projectedVelocity = Vector3.Project(currentVelocity, intendedDirection);
+
             Vector3 desiredDirection = (projectedVelocity.magnitude > 1f) ? projectedVelocity.normalized : intendedDirection;
+
+            // Berücksichtigt das Lenken bei Schlupf
             Quaternion targetRotation = Quaternion.LookRotation(desiredDirection, transform.up);
             float rotationSpeed = 2.5f;
-
             this.transform.localRotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
         }
     }
