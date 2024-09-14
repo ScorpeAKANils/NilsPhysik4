@@ -1358,8 +1358,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_daempfer: 2500
-  m_feder: 800000
+  m_daempfer: 150
+  m_feder: 950
   m_rb: {fileID: 5116534535282916010}
   m_achse: {fileID: 1763435224}
   Mass: 0.5
@@ -3930,8 +3930,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_daempfer: 2500
-  m_feder: 800000
+  m_daempfer: 150
+  m_feder: 950
   m_rb: {fileID: 5116534535282916010}
   m_achse: {fileID: 1763435224}
   Mass: 0.5
@@ -4542,7 +4542,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 3000
   m_Drag: 1
-  m_AngularDrag: 5
+  m_AngularDrag: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
@@ -4567,7 +4567,7 @@ MonoBehaviour:
   _fahrwerksTyp: 1
   rb: {fileID: 3134187282268849756}
   "_motorSt\xE4rke": 350000
-  reibungsKoeffizient: 0.8
+  reibungsKoeffizient: 0.59
   m_reifen: []
   drehGeschwindigkeit: 0.75
   maxVel: 25
@@ -4917,7 +4917,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _federDaempfer: {fileID: 0}
   m_AchsenTyp: 0
-  m_fahrwerksHoehe: 10
+  m_fahrwerksHoehe: 2
   Reifen: {fileID: 3134187281369515444}
   m_reifen:
   - {fileID: 3134187281369515445}
@@ -4994,7 +4994,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _federDaempfer: {fileID: 3134187282290268016}
   m_AchsenTyp: 0
-  m_fahrwerksHoehe: 10
+  m_fahrwerksHoehe: 2
   Reifen: {fileID: 3134187282290268014}
   m_reifen:
   - {fileID: 3134187282290268015}
@@ -5055,8 +5055,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_daempfer: 2500
-  m_feder: 800000
+  m_daempfer: 150
+  m_feder: 950
   m_rb: {fileID: 5116534535282916010}
   m_achse: {fileID: 5116534536427730824}
   Mass: 0.5
@@ -5327,7 +5327,7 @@ MonoBehaviour:
   - {fileID: 894656012}
   - {fileID: 1813247696}
   drehGeschwindigkeit: 2
-  maxVel: 50
+  maxVel: 75
   ignore:
     serializedVersion: 2
     m_Bits: 4
@@ -5343,7 +5343,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1500
   m_Drag: 1
-  m_AngularDrag: 10
+  m_AngularDrag: 7
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
@@ -5625,8 +5625,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3354034aee5ba24fb3b6e106dd87757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_daempfer: 2500
-  m_feder: 800000
+  m_daempfer: 150
+  m_feder: 950
   m_rb: {fileID: 5116534535282916010}
   m_achse: {fileID: 5116534536427730824}
   Mass: 0.5
