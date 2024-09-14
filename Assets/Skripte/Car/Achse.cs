@@ -14,11 +14,15 @@ public class Achse : MonoBehaviour
     private Vector3 ruheLage;
     [SerializeField]
     List<Transform> m_reifen = new List<Transform>();
+    public List<Transform> ReifenList { get { return m_reifen; } }
     [SerializeField]
     Transform Carpos;
     float time;
     public List<Transform> Selectables;
-    public Fahrwerk fahrwerk; 
+    public Fahrwerk fahrwerk;
+    [SerializeField]
+    private Rigidbody rb;
+
     public enum AchsenTyp
     {
         Starr,
@@ -84,7 +88,7 @@ public class Achse : MonoBehaviour
             if (Mathf.Abs(input) > 0.1f)
             {
                 // Berechne den Lenkwinkel basierend auf dem Input
-                float targetAngle = (input*Mathf.Sign(moveDirInput)) * 35f; // Maximaler Lenkwinkel 35 Grad
+                float targetAngle = input * 35f; // Maximaler Lenkwinkel 35 Grad
 
                 // Verwende Mathf.Lerp, um die Lenkung zu glätten
                 float newRotationY = Mathf.LerpAngle(x.transform.localEulerAngles.y, targetAngle, Time.deltaTime * drehgeschwindigkeit);
@@ -99,7 +103,21 @@ public class Achse : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        UpdateAchse(); 
+    }
 
+    public void UpdateAchse()
+    {
+       //foreach(var reifen in m_reifen) 
+       //{
+       //    float auslenkung = BerechneAuslenkung();
+       //    float relativeGeschwindigkeit = rb.GetRelativePointVelocity(reifen.position).magnitude;
+       //     rb.AddForceAtPosition(fahrwerk.ClampShit(transform.up*(BerechneFederkraft(auslenkung) + BerechneDaempfung(relativeGeschwindigkeit))* Time.fixedDeltaTime), reifen.transform.position, ForceMode.VelocityChange);
+       //}
+
+    }
     public float UpdateAchse(Rigidbody rb, Transform reifen)
     {
         float auslenkung = BerechneAuslenkung();

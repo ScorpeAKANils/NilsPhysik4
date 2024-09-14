@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Fahrwerk : MonoBehaviour
 {
@@ -122,23 +123,34 @@ public class Fahrwerk : MonoBehaviour
     }
     void HandleKettenKFZ()
     {
-        Vector3 kraft = BewegungKettenfahrwerk();
-        Vector3 kraftLinks = kraft;
-        Vector3 kraftRechts = kraft;
-
-        if (Mathf.Abs(inputHorizontal) > 0.01f)
+        if (Mathf.Abs(inputVertical) >= 0.1f)
         {
-            if (inputHorizontal > 0)
+            Vector3 kraft = BewegungKettenfahrwerk();
+            Vector3 kraftLinks = kraft;
+            Vector3 kraftRechts = kraft;
+
+            if (Mathf.Abs(inputHorizontal) > 0.01f)
             {
-                kraftRechts *= (1 - Mathf.Abs(inputHorizontal));
+                float drehVerstärkung = 4f;
+                if (inputHorizontal >= 0.01)
+                {
+                    kraftRechts *= -1 * drehVerstärkung;
+                }
+                else if (inputHorizontal <= -0.01)
+                {
+                    kraftLinks *= -1 * drehVerstärkung;
+                }
             }
-            else if (inputHorizontal < 0)
+            var reifenRechts = _achsen[1].ReifenList;
+            var reifenLinks = _achsen[0].ReifenList; 
+            for (int i = 0; i < reifenRechts.Count; i++) 
             {
-                kraftLinks *= (1 - Mathf.Abs(inputHorizontal));
+                rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftLinks), reifenRechts[i].position, ForceMode.Acceleration);
+                rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftLinks), reifenLinks[i].position, ForceMode.Acceleration);
             }
+            Debug.Log("kraft linkss: " + kraftLinks + " kraft rechts: " + kraftRechts);
         }
-        rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftLinks), _achsen[0].transform.position, ForceMode.Acceleration);
-        rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftRechts), _achsen[1].transform.position, ForceMode.Acceleration);
+
     }
 
 
@@ -207,11 +219,13 @@ public class Fahrwerk : MonoBehaviour
 
     Vector3 BewegungKettenfahrwerk()
     {
-        Vector3 forceDir = transform.forward * inputVertical;
+        Vector3 forceDir = transform.forward * Mathf.Sign(inputVertical);
         float normalKraft = rb.mass * Physics.gravity.magnitude;
+        float traktionskraft = _motorStärke * Mathf.Abs(inputVertical);
         float reibungsKraft = reibungsKoeffizient * normalKraft;
-        float traktionskraft = _motorStärke - reibungsKraft;
-        return forceDir * traktionskraft * 3;
+        Vector3 gesKraft = (forceDir * traktionskraft) - (transform.forward * reibungsKraft);
+        Debug.Log(gesKraft.magnitude + " " + gesKraft);
+        return gesKraft;
     }
 
     public void SetFahrwerk(Fahrwerk.FahrwerksTyp f)

@@ -39,13 +39,13 @@ public class FederDaempfer : MonoBehaviour
     private void FixedUpdate()
     {
         RaycastHit hit;
-        bool hitSomething = Physics.SphereCast(transform.position, 0.5f, Vector3.down, out hit, m_zielHoehe * modifyer, ~ignore);
+        bool hitSomething = Physics.SphereCast(transform.position, 1f, Vector3.down, out hit, m_zielHoehe, ~ignore);
         if (hitSomething)
         {
             Vector3 force = CalculateForcePerTimeStamp()*Time.deltaTime;
             if(force.sqrMagnitude >= Mathf.Pow((minForce * Time.deltaTime), 2)) 
             {
-                m_rb.AddForceAtPosition(force, hit.point, ForceMode.Force);
+                m_rb.AddForceAtPosition(force, hit.point, ForceMode.Acceleration);
             }
         }
     }
