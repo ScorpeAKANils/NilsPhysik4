@@ -74,7 +74,7 @@ public class Achse : MonoBehaviour
         return daempfung;
     }
 
-    public void RotateWheels(float input, float drehgeschwindigkeit)
+    public void RotateWheels(float input, float moveDirInput, float drehgeschwindigkeit)
     {
         float radstand = (fahrwerk._achsen[0].transform.position - fahrwerk._achsen[1].transform.position).magnitude;
         float spurweite = (m_reifen[0].position - m_reifen[1].position).magnitude;
@@ -83,40 +83,23 @@ public class Achse : MonoBehaviour
         {
             if (Mathf.Abs(input) > 0.1f)
             {
-                bool istLinkesRad = x.name == "ReifenLV";
-                bool istRechtesRad = x.name == "ReifenRV";
+                // Berechne den Lenkwinkel basierend auf dem Input
+                float targetAngle = (input*Mathf.Sign(moveDirInput)) * 35f; // Maximaler Lenkwinkel 35 Grad
 
-                float innerRadius = radstand / Mathf.Tan(input);
-                float outerRadius = Mathf.Abs(innerRadius) + spurweite * Mathf.Sign(innerRadius);
-
-                float innerAngle = Mathf.Sign(input) * Mathf.Rad2Deg * Mathf.Atan(radstand / Mathf.Abs(innerRadius));
-                float outerAngle = Mathf.Sign(input) * Mathf.Rad2Deg * Mathf.Atan(radstand / Mathf.Abs(outerRadius));
-                float targetAngle = 0f;
-
-                if (istLinkesRad)
-                {
-                    targetAngle = (input > 0) ? innerAngle : outerAngle;
-                }
-                else if (istRechtesRad)
-                {
-                    targetAngle = (input > 0) ? outerAngle : innerAngle;
-                }
-
-                targetAngle = Mathf.Clamp(targetAngle, -35f, 35f);
+                // Verwende Mathf.Lerp, um die Lenkung zu glätten
                 float newRotationY = Mathf.LerpAngle(x.transform.localEulerAngles.y, targetAngle, Time.deltaTime * drehgeschwindigkeit);
                 x.localRotation = Quaternion.Euler(0, newRotationY, 90);
             }
             else
             {
-                if(Mathf.Abs(x.localEulerAngles.y) > 0.05f) 
-                {
-                    float resetRot = Mathf.LerpAngle(x.localEulerAngles.y, 0, Time.deltaTime * drehgeschwindigkeit);
-                    x.localRotation = Quaternion.Euler(0, resetRot, 90);
-                }
+                // Wenn kein Input mehr gegeben wird, zurück zur Neutralstellung
+                float resetRot = Mathf.LerpAngle(x.localEulerAngles.y, 0, Time.deltaTime * drehgeschwindigkeit);
+                x.localRotation = Quaternion.Euler(0, resetRot, 90);
             }
         }
     }
-    
+
+
     public float UpdateAchse(Rigidbody rb, Transform reifen)
     {
         float auslenkung = BerechneAuslenkung();

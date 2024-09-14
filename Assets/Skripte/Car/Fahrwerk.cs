@@ -25,7 +25,6 @@ public class Fahrwerk : MonoBehaviour
     private float inputVertical;
     private float inputHorizontal;
     public LayerMask ignore;
-    public AnimationCurve leistungsKurve;
 
     [SerializeField]
     private float lenkkraft = 10000f;
@@ -38,7 +37,10 @@ public class Fahrwerk : MonoBehaviour
         Radfahrwerk,
         Kettenfahrwerk
     }
-
+    private void Awake()
+    {
+        Time.fixedDeltaTime = 0.01f;
+    }
     private void Update()
     {
         HandleInput();
@@ -94,21 +96,30 @@ public class Fahrwerk : MonoBehaviour
             if (r.Achse.m_AchsenTyp == Achse.AchsenTyp.Lenkbar)
             {
                 // Angepasste Lenkung mit Reifen-Schlupf
-                r.Achse.RotateWheels(inputHorizontal, drehGeschwindigkeit);
-                if (inputHorizontal != 0f)
+                r.Achse.RotateWheels(inputHorizontal, inputVertical, drehGeschwindigkeit);
+                if (Mathf.Abs(rb.velocity.magnitude) > 0.1f)
                 {
                     AdjustVehicleRotation();
                 }
             }
+            Lenkung(r.Achse, r.transform);
         }
 
         // Geschwindigkeit begrenzen
         if (rb.velocity.magnitude > maxVel)
         {
             rb.velocity = rb.velocity.normalized * maxVel;
+            Debug.Log("Velocity nach clamp: " + rb.velocity.magnitude); 
         }
+        IgnoreXAndZRotation(); // das locken dieser scheint ja egal zu sein lmao 
     }
-
+    void IgnoreXAndZRotation() 
+    {
+        var x = transform.rotation;
+        x.z = 0;
+        x.x = 0;
+        transform.rotation = x;
+    }
     void HandleKettenKFZ()
     {
         Vector3 kraft = BewegungKettenfahrwerk();
@@ -126,7 +137,6 @@ public class Fahrwerk : MonoBehaviour
                 kraftLinks *= (1 - Mathf.Abs(inputHorizontal));
             }
         }
-
         rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftLinks), _achsen[0].transform.position, ForceMode.Acceleration);
         rb.AddForceAtPosition(ClampShit(Time.fixedDeltaTime * kraftRechts), _achsen[1].transform.position, ForceMode.Acceleration);
     }
@@ -135,20 +145,26 @@ public class Fahrwerk : MonoBehaviour
     private void Acceleration(Transform reifen, Achse achse)
     {
         Vector3 dir = reifen.forward;
-        if(reifen.name == "ReifenLV")
-            Debug.Log(reifen.forward);
-        float geschwindigkeit = Vector3.Dot(rb.velocity, transform.forward);
-        float velNormalized = Mathf.Clamp01(Mathf.Abs(geschwindigkeit) / maxVel);
-        float availableTorque = leistungsKurve.Evaluate(velNormalized) * inputVertical * _motorStärke;
-        Debug.Log("Speeing up lan: " + dir * availableTorque * Time.fixedDeltaTime); 
-        rb.AddForceAtPosition(dir * availableTorque * Time.fixedDeltaTime, reifen.position, ForceMode.Acceleration);
+        //float geschwindigkeit = Vector3.Dot(rb.velocity, transform.forward);
+        float availableTorque = inputVertical * _motorStärke;
+        Debug.Log("Torque: " + availableTorque);                                                               
+        if (rb.velocity.magnitude < maxVel)
+        {
+            Debug.Log("Angewendete beschleunigung: " + dir * (availableTorque * Time.fixedDeltaTime)); 
+            rb.AddForceAtPosition(dir * (availableTorque * Time.fixedDeltaTime), reifen.position, ForceMode.Acceleration);
+            Debug.Log("Geschwindigkeit vor clamp: " + rb.velocity.magnitude); 
+
+        }
     }
 
     private void ApplyBrakes(Transform reifen)
     {
         Vector3 bremseKraft = -rb.velocity.normalized * bremskraft;
-        rb.AddForceAtPosition(bremseKraft * Time.fixedDeltaTime, reifen.position, ForceMode.Impulse);
+        rb.AddForceAtPosition(bremseKraft * Time.fixedDeltaTime, reifen.position, ForceMode.VelocityChange);
+        rb.angularDrag = Mathf.Lerp(rb.angularDrag, 5f, Time.fixedDeltaTime * 5);
+        Debug.Log("mache shit langsamer"); 
     }
+
     Vector3 ClampShit(Vector3 value) 
     {
         if(value.magnitude > maxVel) 
@@ -162,33 +178,32 @@ public class Fahrwerk : MonoBehaviour
         if (Physics.Raycast(reifen.position, Vector3.down, out RaycastHit hit, a.FahrwerksHoehe, ~ignore))
         {
             float geschwindigkeitsFaktor = Mathf.Clamp(rb.velocity.magnitude, 0.5f, 2f);
-            Vector3 lenkDir = transform.right * inputHorizontal * geschwindigkeitsFaktor;
+            Vector3 lenkDir = transform.right * inputHorizontal * geschwindigkeitsFaktor; // changed from transform.right to reifen.right
 
             Vector3 reifenGeschwindigkeit = rb.GetPointVelocity(hit.point);
             Vector3 seitlicheGeschwindigkeit = Vector3.Project(reifenGeschwindigkeit, transform.right);
             Vector3 korrekturKraft = -seitlicheGeschwindigkeit * lenkkraft * geschwindigkeitsFaktor;
-            //rb.AddForceAtPosition(lenkDir * lenkkraft * Time.fixedDeltaTime, reifen.position, ForceMode.Impulse);
-            //rb.AddForceAtPosition(korrekturKraft * Time.fixedDeltaTime, reifen.position, ForceMode.Impulse);
+            rb.AddForceAtPosition(lenkDir * lenkkraft * Time.fixedDeltaTime, reifen.position, ForceMode.Force);
+            rb.AddForceAtPosition(korrekturKraft * Time.fixedDeltaTime, reifen.position, ForceMode.Force);  
         }
     }
-
 
     private void AdjustVehicleRotation()
     {
         if (Mathf.Abs(inputVertical) > 0.01f)
         {
-            Vector3 intendedDirection = transform.forward * Mathf.Sign(inputVertical);
-            Vector3 currentVelocity = rb.velocity;
-            Vector3 projectedVelocity = Vector3.Project(currentVelocity, intendedDirection);
-
-            Vector3 desiredDirection = (projectedVelocity.magnitude > 1f) ? projectedVelocity.normalized : intendedDirection;
-
-            // Berücksichtigt das Lenken bei Schlupf
-            Quaternion targetRotation = Quaternion.LookRotation(desiredDirection, transform.up);
-            float rotationSpeed = 2.5f;
-            this.transform.localRotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
+            Vector3 intendedDirection = rb.velocity.normalized;
+            Vector3 projectedVelocity = Vector3.Project(rb.velocity, transform.forward);
+            if (projectedVelocity.magnitude > 0.1f)
+            {
+                intendedDirection = projectedVelocity.normalized;
+            }
+            Quaternion targetRotation = Quaternion.LookRotation(intendedDirection, Vector3.up);
+            float rotationSpeed = 1.5f;
+            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
         }
     }
+
 
     Vector3 BewegungKettenfahrwerk()
     {
